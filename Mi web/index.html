@@ -1,0 +1,1700 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daniel Vargas | Técnico de Ciberseguridad</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-dark: #0a192f;
+            --primary-medium: #112240;
+            --primary-light: #233554;
+            --accent: #64ffda;
+            --accent-light: #8affdf;
+            --text-primary: #e6f1ff;
+            --text-secondary: #8892b0;
+            --text-light: #ccd6f6;
+            --white: #ffffff;
+            --light-bg: #ffffff;
+            --light-surface: #f8f9fa;
+            --light-border: #e9ecef;
+            --light-text: #2d3748;
+            --light-secondary: #4a5568;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--primary-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        body.light-mode {
+            background-color: var(--light-bg);
+            color: var(--light-text);
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background-color: rgba(10, 25, 47, 0.95);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .light-mode header {
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .light-mode .logo {
+            color: var(--primary-medium);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 30px;
+        }
+
+        .nav-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            font-size: 16px;
+        }
+
+        .light-mode .nav-links a {
+            color: var(--light-text);
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        .light-mode .nav-links a:hover {
+            color: var(--primary-medium);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-size: 20px;
+            cursor: pointer;
+            margin-left: 20px;
+            transition: transform 0.3s;
+        }
+
+        .light-mode .theme-toggle {
+            color: var(--light-text);
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .mobile-menu {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-light);
+        }
+
+        .light-mode .mobile-menu {
+            color: var(--light-text);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 180px 0 100px;
+            background: linear-gradient(to bottom, var(--primary-dark), var(--primary-medium));
+            text-align: center;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .light-mode .hero {
+            background: linear-gradient(to bottom, var(--light-surface), var(--light-bg));
+        }
+
+        .hero-container {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            background: rgba(17, 34, 64, 0.7);
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(100, 255, 218, 0.2);
+        }
+
+        .light-mode .hero-container {
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--light-border);
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            color: var(--text-light);
+        }
+
+        .light-mode .hero h1 {
+            color: var(--light-text);
+        }
+
+        .hero .subtitle {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, var(--accent), var(--text-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .light-mode .hero .subtitle {
+            background: linear-gradient(45deg, var(--primary-medium), var(--light-text));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin: 0 auto 30px;
+            max-width: 700px;
+        }
+
+        .light-mode .hero p {
+            color: var(--light-secondary);
+        }
+
+        .hero-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .hero-btn {
+            display: inline-block;
+            padding: 10px 25px;
+            background-color: transparent;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .light-mode .hero-btn {
+            color: var(--primary-medium);
+            border: 1px solid var(--primary-medium);
+        }
+
+        .hero-btn:hover {
+            background-color: rgba(100, 255, 218, 0.1);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(100, 255, 218, 0.3);
+        }
+
+        .light-mode .hero-btn:hover {
+            background-color: rgba(10, 25, 47, 0.1);
+            box-shadow: 0 5px 15px rgba(10, 25, 47, 0.2);
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .social-icon {
+            width: 50px;
+            height: 50px;
+            background-color: var(--primary-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+            text-decoration: none;
+            transition: all 0.3s;
+            font-size: 24px;
+        }
+
+        .light-mode .social-icon {
+            background-color: var(--light-surface);
+            color: var(--light-text);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .social-icon:hover {
+            background-color: var(--accent);
+            color: var(--primary-dark);
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(100, 255, 218, 0.4);
+        }
+
+        .light-mode .social-icon:hover {
+            background-color: var(--primary-medium);
+            color: var(--white);
+            box-shadow: 0 5px 15px rgba(10, 25, 47, 0.3);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background-color: transparent;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .btn:hover {
+            background-color: rgba(100, 255, 218, 0.1);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-primary {
+            background-color: var(--accent);
+            color: var(--primary-dark);
+        }
+
+        .light-mode .btn-primary {
+            background-color: var(--primary-medium);
+            color: var(--white);
+            border: 1px solid var(--primary-medium);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-light);
+            box-shadow: 0 10px 20px rgba(100, 255, 218, 0.3);
+        }
+
+        .light-mode .btn-primary:hover {
+            background-color: var(--primary-dark);
+            box-shadow: 0 10px 20px rgba(10, 25, 47, 0.3);
+        }
+
+        /* About Section */
+        .section {
+            padding: 100px 0;
+        }
+
+        .light-mode .section {
+            background-color: var(--light-bg);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--text-light);
+            position: relative;
+            display: inline-block;
+        }
+
+        .light-mode .section-title h2 {
+            color: var(--light-text);
+        }
+
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background-color: var(--accent);
+        }
+
+        .light-mode .section-title h2::after {
+            background-color: var(--primary-medium);
+        }
+
+        .about-content {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+        }
+
+        .about-text {
+            flex: 1;
+        }
+
+        .about-text h3 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--text-light);
+        }
+
+        .light-mode .about-text h3 {
+            color: var(--light-text);
+        }
+
+        .about-text p {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        .light-mode .about-text p {
+            color: var(--light-secondary);
+        }
+
+        .about-image {
+            flex: 1;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(135deg, var(--primary-medium), var(--accent));
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+            font-size: 1.5rem;
+            transition: transform 0.3s;
+        }
+
+        .light-mode .about-image {
+            background: linear-gradient(135deg, var(--primary-medium), var(--light-text));
+            color: var(--white);
+        }
+
+        .about-image:hover {
+            transform: scale(1.03);
+        }
+
+        /* Skills Section */
+        .skills {
+            background-color: var(--primary-medium);
+        }
+
+        .light-mode .skills {
+            background-color: var(--light-surface);
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .skill-card {
+            background-color: var(--primary-light);
+            padding: 30px;
+            border-radius: 8px;
+            transition: transform 0.3s, border-color 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .light-mode .skill-card {
+            background-color: var(--white);
+            border: 1px solid var(--light-border);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .skill-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent);
+            box-shadow: 0 15px 30px rgba(100, 255, 218, 0.2);
+        }
+
+        .light-mode .skill-card:hover {
+            border-color: var(--primary-medium);
+            box-shadow: 0 15px 30px rgba(10, 25, 47, 0.1);
+        }
+
+        .skill-icon {
+            font-size: 40px;
+            color: var(--accent);
+            margin-bottom: 20px;
+        }
+
+        .light-mode .skill-icon {
+            color: var(--primary-medium);
+        }
+
+        .skill-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--text-light);
+        }
+
+        .light-mode .skill-card h3 {
+            color: var(--light-text);
+        }
+
+        .skill-card p {
+            color: var(--text-secondary);
+        }
+
+        .light-mode .skill-card p {
+            color: var(--light-secondary);
+        }
+
+        /* Scripts Section */
+        .scripts-filter {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .filter-btn {
+            padding: 8px 20px;
+            background-color: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--text-secondary);
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .light-mode .filter-btn {
+            color: var(--light-secondary);
+            border: 1px solid var(--light-secondary);
+        }
+
+        .filter-btn.active, .filter-btn:hover {
+            background-color: var(--accent);
+            color: var(--primary-dark);
+            border-color: var(--accent);
+        }
+
+        .light-mode .filter-btn.active, 
+        .light-mode .filter-btn:hover {
+            background-color: var(--primary-medium);
+            color: var(--white);
+            border-color: var(--primary-medium);
+        }
+
+        .scripts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .script-card {
+            background-color: var(--primary-light);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s, border-color 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .light-mode .script-card {
+            background-color: var(--white);
+            border: 1px solid var(--light-border);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .script-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent);
+            box-shadow: 0 15px 30px rgba(100, 255, 218, 0.2);
+        }
+
+        .light-mode .script-card:hover {
+            border-color: var(--primary-medium);
+            box-shadow: 0 15px 30px rgba(10, 25, 47, 0.1);
+        }
+
+        .script-image {
+            height: 200px;
+            background-color: var(--primary-medium);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+            font-size: 40px;
+        }
+
+        .light-mode .script-image {
+            background-color: var(--light-surface);
+            color: var(--primary-medium);
+        }
+
+        .script-content {
+            padding: 25px;
+        }
+
+        .script-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .script-tag {
+            padding: 5px 12px;
+            background-color: rgba(100, 255, 218, 0.1);
+            color: var(--accent);
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        .light-mode .script-tag {
+            background-color: rgba(10, 25, 47, 0.1);
+            color: var(--primary-medium);
+        }
+
+        .script-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: var(--text-light);
+        }
+
+        .light-mode .script-card h3 {
+            color: var(--light-text);
+        }
+
+        .script-card p {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .light-mode .script-card p {
+            color: var(--light-secondary);
+        }
+
+        .script-links {
+            display: flex;
+            gap: 10px;
+        }
+
+        .script-link {
+            padding: 8px 15px;
+            background-color: transparent;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .light-mode .script-link {
+            color: var(--primary-medium);
+            border: 1px solid var(--primary-medium);
+        }
+
+        .script-link:hover {
+            background-color: rgba(100, 255, 218, 0.1);
+        }
+
+        .light-mode .script-link:hover {
+            background-color: rgba(10, 25, 47, 0.1);
+        }
+
+        /* Contact Section */
+        .contact {
+            background-color: var(--primary-medium);
+            padding: 100px 0;
+        }
+
+        .light-mode .contact {
+            background-color: var(--light-surface);
+        }
+
+        .contact-content {
+            display: flex;
+            gap: 50px;
+        }
+
+        .contact-info {
+            flex: 1;
+        }
+
+        .contact-info h3 {
+            color: var(--text-light);
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+
+        .light-mode .contact-info h3 {
+            color: var(--light-text);
+        }
+
+        .contact-info p {
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+        }
+
+        .light-mode .contact-info p {
+            color: var(--light-secondary);
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+            background-color: var(--primary-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: var(--accent);
+            font-size: 20px;
+        }
+
+        .light-mode .contact-icon {
+            background-color: var(--white);
+            color: var(--primary-medium);
+        }
+
+        .contact-text h4 {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+            color: var(--text-light);
+        }
+
+        .light-mode .contact-text h4 {
+            color: var(--light-text);
+        }
+
+        .contact-text p {
+            color: var(--text-secondary);
+        }
+
+        .light-mode .contact-text p {
+            color: var(--light-secondary);
+        }
+
+        .contact-form {
+            flex: 1;
+            background-color: var(--primary-light);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .light-mode .contact-form {
+            background-color: var(--white);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--light-border);
+        }
+
+        .contact-form:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(100, 255, 218, 0.2);
+        }
+
+        .light-mode .contact-form:hover {
+            box-shadow: 0 15px 40px rgba(10, 25, 47, 0.15);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .light-mode .form-group label {
+            color: var(--light-text);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            background-color: var(--primary-medium);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .light-mode .form-control {
+            background-color: var(--light-surface);
+            border: 1px solid var(--light-border);
+            color: var(--light-text);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(100, 255, 218, 0.2);
+        }
+
+        .light-mode .form-control:focus {
+            border-color: var(--primary-medium);
+            box-shadow: 0 0 0 2px rgba(10, 25, 47, 0.2);
+        }
+
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--primary-dark);
+            padding: 50px 0 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .light-mode footer {
+            background-color: var(--light-surface);
+            border-top: 1px solid var(--light-border);
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+        }
+
+        .footer-logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 15px;
+        }
+
+        .light-mode .footer-logo {
+            color: var(--primary-medium);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .footer-column h4 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: var(--text-light);
+        }
+
+        .light-mode .footer-column h4 {
+            color: var(--light-text);
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-column ul li a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s;
+            font-size: 14px;
+        }
+
+        .light-mode .footer-column ul li a {
+            color: var(--light-secondary);
+        }
+
+        .footer-column ul li a:hover {
+            color: var(--accent);
+        }
+
+        .light-mode .footer-column ul li a:hover {
+            color: var(--primary-medium);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .light-mode .social-link {
+            background-color: var(--white);
+            color: var(--light-text);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .social-link:hover {
+            background-color: var(--accent);
+            color: var(--primary-dark);
+            transform: translateY(-3px);
+        }
+
+        .light-mode .social-link:hover {
+            background-color: var(--primary-medium);
+            color: var(--white);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .light-mode .copyright {
+            border-top: 1px solid var(--light-border);
+            color: var(--light-secondary);
+        }
+
+        /* Floating Button */
+        .floating-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background-color: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-dark);
+            font-size: 24px;
+            box-shadow: 0 4px 20px rgba(100, 255, 218, 0.4);
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.3s;
+            border: none;
+        }
+
+        .light-mode .floating-btn {
+            background-color: var(--primary-medium);
+            color: var(--white);
+            box-shadow: 0 4px 20px rgba(10, 25, 47, 0.3);
+        }
+
+        .floating-btn:hover {
+            background-color: var(--accent-light);
+            transform: scale(1.1);
+            box-shadow: 0 6px 25px rgba(100, 255, 218, 0.6);
+        }
+
+        .light-mode .floating-btn:hover {
+            background-color: var(--primary-dark);
+            box-shadow: 0 6px 25px rgba(10, 25, 47, 0.4);
+        }
+
+        /* Cookies Banner */
+        .cookies-banner {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background-color: var(--primary-medium);
+            color: var(--text-primary);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+            max-width: 350px;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .light-mode .cookies-banner {
+            background-color: var(--white);
+            color: var(--light-text);
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--light-border);
+        }
+
+        .cookies-banner.hidden {
+            transform: translateX(-100%);
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .cookies-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .cookies-icon {
+            width: 40px;
+            height: 40px;
+            background-color: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: var(--primary-dark);
+            font-size: 20px;
+        }
+
+        .light-mode .cookies-icon {
+            background-color: var(--primary-medium);
+            color: var(--white);
+        }
+
+        .cookies-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .cookies-text {
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .light-mode .cookies-text {
+            color: var(--light-secondary);
+        }
+
+        .cookies-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .cookie-btn {
+            padding: 8px 15px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            flex: 1;
+        }
+
+        .cookie-accept {
+            background-color: var(--accent);
+            color: var(--primary-dark);
+        }
+
+        .light-mode .cookie-accept {
+            background-color: var(--primary-medium);
+            color: var(--white);
+        }
+
+        .cookie-accept:hover {
+            background-color: var(--accent-light);
+            transform: translateY(-2px);
+        }
+
+        .light-mode .cookie-accept:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .cookie-settings {
+            background-color: transparent;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+        }
+
+        .light-mode .cookie-settings {
+            color: var(--primary-medium);
+            border: 1px solid var(--primary-medium);
+        }
+
+        .cookie-settings:hover {
+            background-color: rgba(100, 255, 218, 0.1);
+        }
+
+        .light-mode .cookie-settings:hover {
+            background-color: rgba(10, 25, 47, 0.1);
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .about-content, .contact-content {
+                flex-direction: column;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                gap: 40px;
+            }
+            
+            .footer-links {
+                flex-wrap: wrap;
+            }
+            
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+            
+            .hero .subtitle {
+                font-size: 1.8rem;
+            }
+            
+            .hero-container {
+                padding: 30px;
+            }
+            
+            .contact-form {
+                padding: 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background-color: var(--primary-dark);
+                flex-direction: column;
+                padding: 20px;
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            }
+
+            .light-mode .nav-links {
+                background-color: var(--light-bg);
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .nav-links li {
+                margin: 10px 0;
+            }
+            
+            .mobile-menu {
+                display: block;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .hero .subtitle {
+                font-size: 1.5rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2rem;
+            }
+            
+            .scripts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .hero-btn {
+                width: 200px;
+                text-align: center;
+            }
+
+            .floating-btn {
+                bottom: 20px;
+                right: 20px;
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+            
+            .hero-container {
+                padding: 20px;
+            }
+            
+            .cookies-banner {
+                left: 20px;
+                right: 20px;
+                max-width: none;
+                bottom: 90px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            
+            .hero .subtitle {
+                font-size: 1.3rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .btn {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+            
+            .hero-btn {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+            
+            .hero-container {
+                padding: 15px;
+            }
+            
+            .scripts-filter {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .filter-btn {
+                width: 200px;
+                text-align: center;
+            }
+            
+            .contact-form {
+                padding: 20px;
+            }
+            
+            .cookies-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <a href="#" class="logo">Daniel Vargas</a>
+                <ul class="nav-links">
+                    <li><a href="#about">Sobre Mí</a></li>
+                    <li><a href="#skills">Habilidades</a></li>
+                    <li><a href="#scripts">Scripts</a></li>
+                    <li><a href="#contact">Contacto</a></li>
+                    <li>
+                        <button class="theme-toggle" id="themeToggle">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                    </li>
+                </ul>
+                <div class="mobile-menu">☰</div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-container">
+                <h1>Daniel Vargas</h1>
+                <div class="subtitle">Técnico de Ciberseguridad</div>
+                <p>Desarrollo scripts y herramientas especializadas para proteger sistemas, redes y datos contra amenazas cibernéticas. Ofrezco soluciones personalizadas para empresas que buscan fortalecer su postura de seguridad.</p>
+                
+                <div class="hero-buttons">
+                    <a href="#about" class="hero-btn">Sobre Mí</a>
+                    <a href="#skills" class="hero-btn">Habilidades</a>
+                    <a href="#scripts" class="hero-btn">Scripts</a>
+                    <a href="#contact" class="hero-btn btn-primary">Contacto</a>
+                </div>
+                
+                <div class="social-icons">
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <i class="fas fa-envelope"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="section" id="about">
+        <div class="container">
+            <div class="section-title">
+                <h2>Sobre Mí</h2>
+            </div>
+            <div class="about-content">
+                <div class="about-text">
+                    <h3>Especialista en Ciberseguridad y Desarrollo de Scripts</h3>
+                    <p>Soy un profesional apasionado por la ciberseguridad con más de 5 años de experiencia desarrollando scripts y herramientas para proteger infraestructuras críticas y sistemas empresariales.</p>
+                    <p>Mi enfoque se centra en crear soluciones prácticas y eficientes que aborden vulnerabilidades específicas y mejoren la postura de seguridad de las organizaciones.</p>
+                    <p>He trabajado con diversas tecnologías y frameworks, desarrollando scripts para automatización de seguridad, análisis de vulnerabilidades, respuesta a incidentes y más.</p>
+                    <a href="#contact" class="btn">Contáctame</a>
+                </div>
+                <div class="about-image">
+                    Especialista en Ciberseguridad
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section class="section skills" id="skills">
+        <div class="container">
+            <div class="section-title">
+                <h2>Habilidades Técnicas</h2>
+            </div>
+            <div class="skills-grid">
+                <div class="skill-card">
+                    <div class="skill-icon">🔍</div>
+                    <h3>Análisis de Vulnerabilidades</h3>
+                    <p>Desarrollo de scripts para identificar y evaluar vulnerabilidades en sistemas, redes y aplicaciones.</p>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">🛡️</div>
+                    <h3>Automatización de Seguridad</h3>
+                    <p>Creación de herramientas para automatizar tareas de seguridad y mejorar la eficiencia operativa.</p>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">📊</div>
+                    <h3>Análisis Forense</h3>
+                    <p>Scripts para recopilar y analizar evidencias digitales tras incidentes de seguridad.</p>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">🌐</div>
+                    <h3>Seguridad Web</h3>
+                    <p>Herramientas para evaluar y fortalecer la seguridad de aplicaciones y servicios web.</p>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">🔒</div>
+                    <h3>Criptografía</h3>
+                    <p>Implementación de algoritmos criptográficos y scripts para proteger datos sensibles.</p>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">⚡</div>
+                    <h3>Respuesta a Incidentes</h3>
+                    <p>Desarrollo de scripts para detectar, contener y erradicar amenazas de seguridad.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Scripts Section -->
+    <section class="section" id="scripts">
+        <div class="container">
+            <div class="section-title">
+                <h2>Mis Scripts</h2>
+            </div>
+            <div class="scripts-filter">
+                <button class="filter-btn active" data-filter="all">Todos</button>
+                <button class="filter-btn" data-filter="vulnerability">Análisis de Vulnerabilidades</button>
+                <button class="filter-btn" data-filter="automation">Automatización</button>
+                <button class="filter-btn" data-filter="forensic">Forense</button>
+                <button class="filter-btn" data-filter="web">Seguridad Web</button>
+            </div>
+            <div class="scripts-grid">
+                <!-- Script 1 -->
+                <div class="script-card" data-category="vulnerability">
+                    <div class="script-image">
+                        🔍
+                    </div>
+                    <div class="script-content">
+                        <div class="script-tags">
+                            <span class="script-tag">Python</span>
+                            <span class="script-tag">Vulnerability</span>
+                        </div>
+                        <h3>Network Scanner Pro</h3>
+                        <p>Script avanzado para escaneo de redes que identifica dispositivos, servicios y vulnerabilidades conocidas.</p>
+                        <div class="script-links">
+                            <a href="#" class="script-link">Ver Detalles</a>
+                            <a href="#" class="script-link">Descargar</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Script 2 -->
+                <div class="script-card" data-category="automation">
+                    <div class="script-image">
+                        ⚙️
+                    </div>
+                    <div class="script-content">
+                        <div class="script-tags">
+                            <span class="script-tag">Bash</span>
+                            <span class="script-tag">Automation</span>
+                        </div>
+                        <h3>Security Automation Toolkit</h3>
+                        <p>Conjunto de scripts para automatizar tareas de seguridad como backups, actualizaciones y monitoreo.</p>
+                        <div class="script-links">
+                            <a href="#" class="script-link">Ver Detalles</a>
+                            <a href="#" class="script-link">Descargar</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Script 3 -->
+                <div class="script-card" data-category="forensic">
+                    <div class="script-image">
+                        📊
+                    </div>
+                    <div class="script-content">
+                        <div class="script-tags">
+                            <span class="script-tag">Python</span>
+                            <span class="script-tag">Forensic</span>
+                        </div>
+                        <h3>Log Analyzer</h3>
+                        <p>Herramienta para análisis forense que procesa logs de sistemas y aplicaciones para identificar actividades sospechosas.</p>
+                        <div class="script-links">
+                            <a href="#" class="script-link">Ver Detalles</a>
+                            <a href="#" class="script-link">Descargar</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <div class="container">
+            <div class="section-title">
+                <h2>Contacto</h2>
+            </div>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <h3>¿Interesado en mis scripts?</h3>
+                    <p>Ponte en contacto conmigo para discutir cómo mis soluciones de ciberseguridad pueden beneficiar a tu organización.</p>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon">📧</div>
+                        <div class="contact-text">
+                            <h4>Email</h4>
+                            <p>daniel.vargas@ejemplo.com</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon">📱</div>
+                        <div class="contact-text">
+                            <h4>Teléfono</h4>
+                            <p>+34 123 456 789</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon">📍</div>
+                        <div class="contact-text">
+                            <h4>Ubicación</h4>
+                            <p>Madrid, España</p>
+                        </div>
+                    </div>
+                    
+                    <div class="social-links">
+                        <a href="#" class="social-link">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="#" class="social-link">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="#" class="social-link">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="contact-form">
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <label for="name">Nombre</label>
+                            <input type="text" id="name" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="company">Empresa</label>
+                            <input type="text" id="company" class="form-control">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="message">Mensaje</label>
+                            <textarea id="message" class="form-control" required></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Enviar Mensaje</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <div class="footer-logo">Daniel Vargas</div>
+                    <p>Técnico especializado en ciberseguridad y desarrollo de scripts para proteger sistemas empresariales.</p>
+                </div>
+                
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Enlaces Rápidos</h4>
+                        <ul>
+                            <li><a href="#home">Inicio</a></li>
+                            <li><a href="#about">Sobre Mí</a></li>
+                            <li><a href="#skills">Habilidades</a></li>
+                            <li><a href="#scripts">Scripts</a></li>
+                            <li><a href="#contact">Contacto</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-column">
+                        <h4>Categorías</h4>
+                        <ul>
+                            <li><a href="#">Análisis de Vulnerabilidades</a></li>
+                            <li><a href="#">Automatización</a></li>
+                            <li><a href="#">Análisis Forense</a></li>
+                            <li><a href="#">Seguridad Web</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 Daniel Vargas - Técnico de Ciberseguridad. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating Button -->
+    <button class="floating-btn" id="floatingBtn">
+        <i class="fas fa-shield-alt"></i>
+    </button>
+
+    <!-- Cookies Banner -->
+    <div class="cookies-banner" id="cookiesBanner">
+        <div class="cookies-header">
+            <div class="cookies-icon">
+                <i class="fas fa-cookie-bite"></i>
+            </div>
+            <div class="cookies-title">Configuración de Cookies</div>
+        </div>
+        <div class="cookies-text">
+            Utilizamos cookies propias y de terceros para mejorar nuestros servicios y mostrarle publicidad relacionada con sus preferencias. Puede aceptar todas las cookies o configurar sus preferencias.
+        </div>
+        <div class="cookies-buttons">
+            <button class="cookie-btn cookie-accept" id="cookieAccept">Aceptar</button>
+            <button class="cookie-btn cookie-settings" id="cookieSettings">Configurar</button>
+        </div>
+    </div>
+
+    <script>
+        // Esperar a que el DOM esté completamente cargado
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("Página cargada correctamente");
+            
+            // Filtrado de scripts
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const scriptCards = document.querySelectorAll('.script-card');
+            
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remover clase active de todos los botones
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Agregar clase active al botón clickeado
+                    this.classList.add('active');
+                    
+                    const filterValue = this.getAttribute('data-filter');
+                    
+                    scriptCards.forEach(card => {
+                        if (filterValue === 'all' || card.getAttribute('data-category') === filterValue) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            });
+            
+            // Menú móvil
+            const mobileMenu = document.querySelector('.mobile-menu');
+            const navLinks = document.querySelector('.nav-links');
+            
+            if (mobileMenu && navLinks) {
+                mobileMenu.addEventListener('click', function() {
+                    navLinks.classList.toggle('active');
+                });
+            }
+            
+            // Formulario de contacto
+            const contactForm = document.getElementById('contactForm');
+            
+            if (contactForm) {
+                contactForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // Aquí iría la lógica para enviar el formulario
+                    alert('¡Gracias por tu mensaje! Te contactaré pronto.');
+                    contactForm.reset();
+                });
+            }
+            
+            // Smooth scroll para enlaces de navegación
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                        
+                        // Cerrar menú móvil si está abierto
+                        if (window.innerWidth <= 768 && navLinks) {
+                            navLinks.classList.remove('active');
+                        }
+                    }
+                });
+            });
+            
+            // Toggle de tema claro/oscuro
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = themeToggle.querySelector('i');
+            
+            themeToggle.addEventListener('click', function() {
+                document.body.classList.toggle('light-mode');
+                
+                if (document.body.classList.contains('light-mode')) {
+                    themeIcon.classList.remove('fa-moon');
+                    themeIcon.classList.add('fa-sun');
+                } else {
+                    themeIcon.classList.remove('fa-sun');
+                    themeIcon.classList.add('fa-moon');
+                }
+            });
+            
+            // Botón flotante - scroll to top
+            const floatingBtn = document.getElementById('floatingBtn');
+            
+            floatingBtn.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // Cookies Banner
+            const cookiesBanner = document.getElementById('cookiesBanner');
+            const cookieAccept = document.getElementById('cookieAccept');
+            const cookieSettings = document.getElementById('cookieSettings');
+            
+            // Mostrar banner de cookies después de 2 segundos
+            setTimeout(() => {
+                cookiesBanner.classList.remove('hidden');
+            }, 2000);
+            
+            // Aceptar cookies
+            cookieAccept.addEventListener('click', function() {
+                cookiesBanner.classList.add('hidden');
+                // Aquí iría la lógica para guardar la preferencia de cookies
+                localStorage.setItem('cookiesAccepted', 'true');
+            });
+            
+            // Configurar cookies
+            cookieSettings.addEventListener('click', function() {
+                // Aquí iría la lógica para mostrar más opciones de configuración
+                alert('Aquí podrías mostrar más opciones de configuración de cookies');
+            });
+            
+            // Verificar si ya se aceptaron cookies anteriormente
+            if (localStorage.getItem('cookiesAccepted') === 'true') {
+                cookiesBanner.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>

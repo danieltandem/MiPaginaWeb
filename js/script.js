@@ -289,13 +289,13 @@ async function sendEmail(formData) {
 
     console.log('Parámetros del template:', templateParams);
     console.log('Service ID:', 'service_0yae93w');
-    console.log('Template ID:', 'template_contacto_portfolio');
+    console.log('Template ID:', 'template_z8fuguv');
 
     try {
         // USA TUS IDs REALES AQUÍ:
         const result = await emailjs.send(
             'service_0yae93w',     // Tu Service ID
-            'template_contacto_portfolio',    // Template ID - cámbialo si es diferente
+            'template_z8fuguv',    // Template ID - cámbialo si es diferente
             templateParams
         );
         

@@ -7,6 +7,15 @@
 
     <link rel="stylesheet" href="css/styles.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    
+    <!-- EmailJS -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        // Inicializar EmailJS con tu Public Key
+        (function() {
+            emailjs.init("4mzP0S0K65AaPOK88");
+        })();
+    </script>
 </head>
 <body>
     <!-- Canvas para el fondo de partículas -->
@@ -149,7 +158,6 @@
                 <h2>Habilidades Técnicas</h2>
             </div>
             <div class="skills-grid">
-                <!-- (Contenido igual que antes...) -->
                 <div class="skill-card">
                     <div class="skill-icon">🔍</div>
                     <h3>Análisis de Vulnerabilidades</h3>
@@ -198,7 +206,6 @@
                 <button class="filter-btn" data-filter="web">Seguridad Web</button>
             </div>
             <div class="scripts-grid">
-                <!-- Ejemplos (igual) -->
                 <div class="script-card" data-category="vulnerability">
                     <div class="script-image">🔍</div>
                     <div class="script-content">
@@ -273,7 +280,7 @@
                 </div>
 
                 <div class="contact-form">
-                    <!-- Form funcional (se guarda en localStorage y se notifica) -->
+                    <!-- Form funcional con EmailJS -->
                     <form id="contactForm">
                         <div class="form-group">
                             <label for="name">Nombre</label>
@@ -295,7 +302,10 @@
                             <textarea id="message" class="form-control" required></textarea>
                         </div>
 
-                        <button type="submit" class="btn btn-primary">Enviar Mensaje</button>
+                        <button type="submit" class="btn btn-primary" id="submitBtn">
+                            <span id="btnText">Enviar Mensaje</span>
+                            <div id="btnLoader" class="btn-loader hidden"></div>
+                        </button>
                     </form>
                 </div>
             </div>
@@ -353,7 +363,7 @@
         <i class="fas fa-shield-alt"></i>
     </button>
 
-    <!-- Banner de Cookies (inicia oculto; script lo mostrará si no aceptado) -->
+    <!-- Banner de Cookies -->
     <div class="cookies-banner hidden" id="cookiesBanner">
         <div class="cookies-header">
             <div class="cookies-icon"><i class="fas fa-cookie-bite"></i></div>

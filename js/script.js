@@ -9,7 +9,14 @@ let particleAnimation = null;
 
 /* Wait DOM */
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM ready');
+    console.log('DOM ready - EmailJS loaded:', typeof emailjs !== 'undefined');
+    
+    // Verificar que EmailJS está cargado
+    if (typeof emailjs === 'undefined') {
+        console.error('EmailJS no está cargado correctamente');
+    } else {
+        console.log('EmailJS inicializado correctamente');
+    }
 
     /* ---------- PARTICLES (mejorado y adaptativo) ---------- */
     initParticles();
@@ -97,6 +104,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             try {
+                console.log('Intentando enviar email...');
+                
                 // Guardar en localStorage como respaldo
                 const saved = JSON.parse(localStorage.getItem('contactMessages') || '[]');
                 saved.push({
@@ -107,14 +116,35 @@ document.addEventListener('DOMContentLoaded', () => {
                     timestamp: new Date().toISOString()
                 });
                 localStorage.setItem('contactMessages', JSON.stringify(saved));
+                console.log('Mensaje guardado en localStorage');
 
                 // Intentar enviar por EmailJS
-                await sendEmail({name, email, company, message});
+                const result = await sendEmail({name, email, company, message});
+                console.log('Email enviado correctamente:', result);
+                
                 showNotification('¡Mensaje enviado correctamente! Te contactaré pronto.', 'success');
                 contactForm.reset();
+                
             } catch (error) {
-                console.error('Error:', error);
-                showNotification('Mensaje guardado localmente. Error al enviar email: ' + error.message, 'info');
+                console.error('Error completo:', error);
+                console.error('Error status:', error.status);
+                console.error('Error text:', error.text);
+                
+                let errorMessage = 'Mensaje guardado localmente. ';
+                
+                if (error.status === 0) {
+                    errorMessage += 'Error de conexión. Verifica tu internet.';
+                } else if (error.status === 400) {
+                    errorMessage += 'Error en la configuración del email.';
+                } else if (error.status === 401) {
+                    errorMessage += 'Error de autenticación. Verifica tus credenciales de EmailJS.';
+                } else if (error.status === 402) {
+                    errorMessage += 'Límite de emails alcanzado.';
+                } else {
+                    errorMessage += 'Error al enviar email: ' + (error.text || error.message || 'Error desconocido');
+                }
+                
+                showNotification(errorMessage, 'info');
             } finally {
                 // Restaurar botón
                 submitBtn.disabled = false;
@@ -233,9 +263,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
 /* ------------------- EMAIL FUNCTION ------------------- */
 async function sendEmail(formData) {
+    console.log('Iniciando envío de email...');
+    console.log('Datos del formulario:', formData);
+    
     // Solo intentar enviar email si EmailJS está disponible
     if (typeof emailjs === 'undefined') {
-        throw new Error('EmailJS no está cargado');
+        console.error('EmailJS no está definido');
+        throw new Error('EmailJS no está cargado correctamente. Verifica que el script esté incluido.');
+    }
+
+    // Verificar que emailjs.send existe
+    if (typeof emailjs.send !== 'function') {
+        console.error('emailjs.send no es una función');
+        throw new Error('EmailJS no está inicializado correctamente');
     }
 
     const templateParams = {
@@ -247,12 +287,28 @@ async function sendEmail(formData) {
         reply_to: formData.email
     };
 
-    // USA TUS IDs REALES AQUÍ:
-    return await emailjs.send(
-        'service_0yae93w',     // Tu Service ID
-        'template_contacto_portfolio',    // Template ID - cámbialo si es diferente
-        templateParams
-    );
+    console.log('Parámetros del template:', templateParams);
+    console.log('Service ID:', 'service_0yae93w');
+    console.log('Template ID:', 'template_contacto_portfolio');
+
+    try {
+        // USA TUS IDs REALES AQUÍ:
+        const result = await emailjs.send(
+            'service_0yae93w',     // Tu Service ID
+            'template_contacto_portfolio',    // Template ID - cámbialo si es diferente
+            templateParams
+        );
+        
+        console.log('EmailJS response:', result);
+        return result;
+        
+    } catch (error) {
+        console.error('Error detallado de EmailJS:');
+        console.error('Status:', error.status);
+        console.error('Text:', error.text);
+        console.error('Full error:', error);
+        throw error;
+    }
 }
 
 /* ------------------- VALIDATION ------------------- */

@@ -1,599 +1,493 @@
-// MAIN SCRIPT mejorado: formulario funcional con EmailJS, partículas adaptativas, modo claro mejorado
-
-/* Helpers */
-function $(sel) { return document.querySelector(sel); }
-function $all(sel) { return Array.from(document.querySelectorAll(sel)); }
-
-// Variable global para las partículas
-let particleAnimation = null;
-
-/* Wait DOM */
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM ready - EmailJS loaded:', typeof emailjs !== 'undefined');
-    
-    // Verificar que EmailJS está cargado
-    if (typeof emailjs === 'undefined') {
-        console.error('EmailJS no está cargado correctamente');
-    } else {
-        console.log('EmailJS inicializado correctamente');
-    }
-
-    /* ---------- PARTICLES (mejorado y adaptativo) ---------- */
+// ===== INICIALIZACIÓN =====
+document.addEventListener('DOMContentLoaded', function() {
+    // Inicializar todas las funcionalidades
+    initTheme();
     initParticles();
-
-    /* ---------- HERO CARD hover efecto extra ---------- */
-    const heroCard = $('#heroCard');
-    if(heroCard){
-        heroCard.addEventListener('mouseenter', () => heroCard.style.transform = 'scale(1.03) translateY(-10px)');
-        heroCard.addEventListener('mouseleave', () => heroCard.style.transform = 'scale(1) translateY(0)');
-    }
-
-    /* ---------- MENÚ MÓVIL ---------- */
-    const mobileMenu = document.querySelector('.mobile-menu');
-    const navLinks = document.querySelector('.nav-links');
-    if(mobileMenu && navLinks){
-        mobileMenu.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-            mobileMenu.textContent = navLinks.classList.contains('active') ? '✕' : '☰';
-        });
-    }
-
-    /* ---------- CARRUSEL (5 slides) ---------- */
     initCarousel();
-
-    /* ---------- FILTRO SCRIPTS ---------- */
-    const filterButtons = $all('.filter-btn');
-    if (filterButtons.length > 0) {
-        filterButtons.forEach(btn => {
-            btn.addEventListener('click', function(){
-                $all('.filter-btn').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                const filter = this.dataset.filter;
-                const scriptCards = $all('.script-card');
-                
-                scriptCards.forEach(card => {
-                    if(filter === 'all' || card.dataset.category === filter){
-                        card.style.display = 'block';
-                        setTimeout(() => { 
-                            card.style.opacity = '1'; 
-                            card.style.transform = 'translateY(0)'; 
-                        }, 40);
-                    } else {
-                        card.style.opacity = '0';
-                        card.style.transform = 'translateY(20px)';
-                        setTimeout(() => card.style.display = 'none', 300);
-                    }
-                });
-            });
-        });
-    }
-
-    /* ---------- FORMULARIO (funcional) ---------- */
-    const contactForm = $('#contactForm');
-    if(contactForm){
-        contactForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const submitBtn = $('#submitBtn');
-            const btnText = $('#btnText');
-            const btnLoader = $('#btnLoader');
-            
-            if (!submitBtn || !btnText || !btnLoader) {
-                showNotification('Error: Elementos del formulario no encontrados', 'error');
-                return;
-            }
-
-            // Mostrar loading
-            submitBtn.disabled = true;
-            btnText.textContent = 'Enviando...';
-            btnLoader.classList.remove('hidden');
-
-            const name = $('#name').value.trim();
-            const email = $('#email').value.trim();
-            const company = $('#company').value.trim();
-            const message = $('#message').value.trim();
-
-            const errors = validateForm({name, email, message});
-            if(errors.length){
-                showNotification(errors.join('. '), 'error');
-                // Restaurar botón
-                submitBtn.disabled = false;
-                btnText.textContent = 'Enviar Mensaje';
-                btnLoader.classList.add('hidden');
-                return;
-            }
-
-            try {
-                console.log('Intentando enviar email...');
-                
-                // Guardar en localStorage como respaldo
-                const saved = JSON.parse(localStorage.getItem('contactMessages') || '[]');
-                saved.push({
-                    name,
-                    email, 
-                    company,
-                    message,
-                    timestamp: new Date().toISOString()
-                });
-                localStorage.setItem('contactMessages', JSON.stringify(saved));
-                console.log('Mensaje guardado en localStorage');
-
-                // Intentar enviar por EmailJS
-                const result = await sendEmail({name, email, company, message});
-                console.log('Email enviado correctamente:', result);
-                
-                showNotification('¡Mensaje enviado correctamente! Te contactaré pronto.', 'success');
-                contactForm.reset();
-                
-            } catch (error) {
-                console.error('Error completo:', error);
-                console.error('Error status:', error.status);
-                console.error('Error text:', error.text);
-                
-                let errorMessage = 'Mensaje guardado localmente. ';
-                
-                if (error.status === 0) {
-                    errorMessage += 'Error de conexión. Verifica tu internet.';
-                } else if (error.status === 400) {
-                    errorMessage += 'Error en la configuración del email.';
-                } else if (error.status === 401) {
-                    errorMessage += 'Error de autenticación. Verifica tus credenciales de EmailJS.';
-                } else if (error.status === 402) {
-                    errorMessage += 'Límite de emails alcanzado.';
-                } else {
-                    errorMessage += 'Error al enviar email: ' + (error.text || error.message || 'Error desconocido');
-                }
-                
-                showNotification(errorMessage, 'info');
-            } finally {
-                // Restaurar botón
-                submitBtn.disabled = false;
-                btnText.textContent = 'Enviar Mensaje';
-                btnLoader.classList.add('hidden');
-            }
-        });
-    }
-
-    /* ---------- COOKIES (persistente) ---------- */
-    const cookiesBanner = $('#cookiesBanner');
-    const cookieAccept = $('#cookieAccept');
-    const cookieSettings = $('#cookieSettings');
-
-    if (cookiesBanner && cookieAccept && cookieSettings) {
-        setTimeout(() => {
-            if(localStorage.getItem('cookiesAccepted') !== 'true'){
-                cookiesBanner.classList.remove('hidden');
-            }
-        }, 900);
-
-        cookieAccept.addEventListener('click', () => {
-            localStorage.setItem('cookiesAccepted', 'true');
-            cookiesBanner.classList.add('hidden');
-            showNotification('Preferencias de cookies guardadas', 'success');
-        });
-        
-        cookieSettings.addEventListener('click', () => {
-            showNotification('Panel de configuración de cookies (simulado)', 'info');
-        });
-    }
-
-    /* ---------- THEME from localStorage ---------- */
-    const themeToggle = $('#themeToggle');
-    if (themeToggle) {
-        const themeIcon = themeToggle.querySelector('i');
-        const savedTheme = localStorage.getItem('theme');
-        
-        if(savedTheme === 'light'){ 
-            document.body.classList.add('light-mode'); 
-            if (themeIcon) {
-                themeIcon.classList.replace('fa-moon','fa-sun');
-            }
-        }
-
-        themeToggle.addEventListener('click', () => {
-            const isLight = document.body.classList.toggle('light-mode');
-            if (themeIcon) {
-                if(isLight){ 
-                    themeIcon.classList.replace('fa-moon','fa-sun'); 
-                    localStorage.setItem('theme','light'); 
-                } else { 
-                    themeIcon.classList.replace('fa-sun','fa-moon'); 
-                    localStorage.setItem('theme','dark'); 
-                }
-            }
-            
-            // Reiniciar partículas cuando cambia el tema
-            initParticles();
-        });
-    }
-
-    /* ---------- FLOATING BTN ---------- */
-    const floatingBtn = $('#floatingBtn');
-    if (floatingBtn) {
-        floatingBtn.addEventListener('click', () => {
-            window.scrollTo({top: 0, behavior: 'smooth'});
-        });
-        
-        window.addEventListener('scroll', () => {
-            if (window.pageYOffset > 300){ 
-                floatingBtn.style.opacity = '1'; 
-                floatingBtn.style.visibility = 'visible'; 
-            } else { 
-                floatingBtn.style.opacity = '0'; 
-                floatingBtn.style.visibility = 'hidden'; 
-            }
-        });
-    }
-
-    /* ---------- ANIMACIONES ON SCROLL ---------- */
-    function animateOnScroll(){
-        const elements = $all('.skill-card, .script-card, .about-content, .contact-content');
-        elements.forEach(el => {
-            if (el) {
-                const rect = el.getBoundingClientRect();
-                const screenPosition = window.innerHeight / 1.3;
-                if(rect.top < screenPosition){ 
-                    el.style.opacity = '1'; 
-                    el.style.transform = 'translateY(0)'; 
-                }
-            }
-        });
-    }
-
-    // Inicializar animaciones
-    const animatedElements = $all('.skill-card, .script-card, .about-content, .contact-content');
-    animatedElements.forEach(el => {
-        if (el) {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(30px)';
-            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-        }
-    });
-
-    window.addEventListener('load', animateOnScroll);
-    window.addEventListener('scroll', animateOnScroll);
-
-    /* ---------- FOOTER YEAR + CLOCK ---------- */
-    const yearElement = document.getElementById('year');
-    if (yearElement) {
-        yearElement.textContent = new Date().getFullYear();
-    }
-    startClock();
+    initScriptsFilter();
+    initContactForm();
+    initFloatingButton();
+    initCookiesBanner();
+    initClock();
+    initScrollAnimations();
+    initMobileMenu();
 });
 
-/* ------------------- EMAIL FUNCTION ------------------- */
-async function sendEmail(formData) {
-    console.log('Iniciando envío de email...');
-    console.log('Datos del formulario:', formData);
+// ===== TEMA CLARO/OSCURO =====
+function initTheme() {
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = themeToggle.querySelector('i');
     
-    // Solo intentar enviar email si EmailJS está disponible
-    if (typeof emailjs === 'undefined') {
-        console.error('EmailJS no está definido');
-        throw new Error('EmailJS no está cargado correctamente. Verifica que el script esté incluido.');
+    // Verificar preferencia guardada
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light') {
+        document.body.classList.add('light-mode');
+        themeIcon.classList.replace('fa-moon', 'fa-sun');
     }
-
-    // Verificar que emailjs.send existe
-    if (typeof emailjs.send !== 'function') {
-        console.error('emailjs.send no es una función');
-        throw new Error('EmailJS no está inicializado correctamente');
-    }
-
-    const templateParams = {
-        from_name: formData.name,
-        from_email: formData.email,
-        company: formData.company || 'No especificada',
-        message: formData.message,
-        to_email: 'danielvargasdemiguel@gmail.com',
-        reply_to: formData.email
-    };
-
-    console.log('Parámetros del template:', templateParams);
-    console.log('Service ID:', 'service_0yae93w');
-    console.log('Template ID:', 'template_z8fuguv');
-
-    try {
-        // USA TUS IDs REALES AQUÍ:
-        const result = await emailjs.send(
-            'service_0yae93w',     // Tu Service ID
-            'template_z8fuguv',    // Template ID - cámbialo si es diferente
-            templateParams
-        );
+    
+    themeToggle.addEventListener('click', function() {
+        document.body.classList.toggle('light-mode');
         
-        console.log('EmailJS response:', result);
-        return result;
-        
-    } catch (error) {
-        console.error('Error detallado de EmailJS:');
-        console.error('Status:', error.status);
-        console.error('Text:', error.text);
-        console.error('Full error:', error);
-        throw error;
-    }
+        if (document.body.classList.contains('light-mode')) {
+            themeIcon.classList.replace('fa-moon', 'fa-sun');
+            localStorage.setItem('theme', 'light');
+        } else {
+            themeIcon.classList.replace('fa-sun', 'fa-moon');
+            localStorage.setItem('theme', 'dark');
+        }
+    });
 }
 
-/* ------------------- VALIDATION ------------------- */
-function validateForm({name, email, message}){
-    const errors = [];
-    if(!name || name.length < 2) {
-        errors.push('El nombre debe tener al menos 2 caracteres');
+// ===== FONDO DE PARTÍCULAS MEJORADO =====
+function initParticles() {
+    const canvas = document.getElementById('particleCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    // Ajustar tamaño del canvas
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
     }
     
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if(!email || !emailRegex.test(email)) {
-        errors.push('Introduce un email válido');
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+    
+    // Configuración de partículas
+    const particles = [];
+    const particleCount = 80;
+    
+    // Colores para modo oscuro y claro
+    const darkColors = ['#64ffda', '#8affdf', '#a8fff0', '#ccd6f6'];
+    const lightColors = ['#0f766e', '#0d9488', '#14b8a6', '#2dd4bf', '#5eead4'];
+    
+    // Crear partículas
+    function createParticles() {
+        particles.length = 0;
+        
+        for (let i = 0; i < particleCount; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                size: Math.random() * 3 + 1,
+                speedX: (Math.random() - 0.5) * 1,
+                speedY: (Math.random() - 0.5) * 1,
+                color: document.body.classList.contains('light-mode') 
+                    ? lightColors[Math.floor(Math.random() * lightColors.length)]
+                    : darkColors[Math.floor(Math.random() * darkColors.length)]
+            });
+        }
     }
     
-    if(!message || message.length < 10) {
-        errors.push('El mensaje debe tener al menos 10 caracteres');
+    // Dibujar partículas
+    function drawParticles() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Actualizar colores si cambia el tema
+        const isLightMode = document.body.classList.contains('light-mode');
+        const colors = isLightMode ? lightColors : darkColors;
+        
+        particles.forEach(particle => {
+            // Actualizar posición
+            particle.x += particle.speedX;
+            particle.y += particle.speedY;
+            
+            // Rebotar en los bordes
+            if (particle.x < 0 || particle.x > canvas.width) particle.speedX *= -1;
+            if (particle.y < 0 || particle.y > canvas.height) particle.speedY *= -1;
+            
+            // Actualizar color si es necesario
+            if (isLightMode && darkColors.includes(particle.color)) {
+                particle.color = colors[Math.floor(Math.random() * colors.length)];
+            } else if (!isLightMode && lightColors.includes(particle.color)) {
+                particle.color = colors[Math.floor(Math.random() * colors.length)];
+            }
+            
+            // Dibujar partícula
+            ctx.beginPath();
+            ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+            ctx.fillStyle = particle.color;
+            ctx.globalAlpha = document.body.classList.contains('light-mode') ? 0.9 : 0.7;
+            ctx.fill();
+            
+            // Dibujar conexiones
+            particles.forEach(otherParticle => {
+                const dx = particle.x - otherParticle.x;
+                const dy = particle.y - otherParticle.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance < 100) {
+                    ctx.beginPath();
+                    ctx.strokeStyle = particle.color;
+                    ctx.globalAlpha = 0.2 * (1 - distance / 100);
+                    ctx.lineWidth = 0.5;
+                    ctx.moveTo(particle.x, particle.y);
+                    ctx.lineTo(otherParticle.x, otherParticle.y);
+                    ctx.stroke();
+                }
+            });
+        });
+        
+        requestAnimationFrame(drawParticles);
     }
     
-    return errors;
+    createParticles();
+    drawParticles();
+    
+    // Recrear partículas al cambiar de tema
+    const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.attributeName === 'class') {
+                createParticles();
+            }
+        });
+    });
+    
+    observer.observe(document.body, { attributes: true });
 }
 
-/* ------------------- NOTIFICATIONS ------------------- */
-function showNotification(msg, type = 'info'){
+// ===== CARRUSEL MEJORADO =====
+function initCarousel() {
+    const carousel = document.getElementById('aboutCarousel');
+    const slides = carousel.querySelectorAll('.carousel-slide');
+    const dots = carousel.querySelectorAll('.dot');
+    const prevBtn = document.getElementById('carouselPrev');
+    const nextBtn = document.getElementById('carouselNext');
+    
+    let currentSlide = 0;
+    let slideInterval;
+    
+    // Mostrar slide específico
+    function showSlide(index) {
+        // Ocultar todos los slides
+        slides.forEach(slide => slide.classList.remove('active'));
+        dots.forEach(dot => dot.classList.remove('active'));
+        
+        // Ajustar índice si está fuera de rango
+        if (index >= slides.length) currentSlide = 0;
+        else if (index < 0) currentSlide = slides.length - 1;
+        else currentSlide = index;
+        
+        // Mostrar slide actual
+        slides[currentSlide].classList.add('active');
+        dots[currentSlide].classList.add('active');
+    }
+    
+    // Siguiente slide
+    function nextSlide() {
+        showSlide(currentSlide + 1);
+    }
+    
+    // Slide anterior
+    function prevSlide() {
+        showSlide(currentSlide - 1);
+    }
+    
+    // Iniciar autoplay
+    function startAutoPlay() {
+        slideInterval = setInterval(nextSlide, 4000);
+    }
+    
+    // Detener autoplay
+    function stopAutoPlay() {
+        clearInterval(slideInterval);
+    }
+    
+    // Event listeners
+    nextBtn.addEventListener('click', function() {
+        nextSlide();
+        stopAutoPlay();
+        startAutoPlay();
+    });
+    
+    prevBtn.addEventListener('click', function() {
+        prevSlide();
+        stopAutoPlay();
+        startAutoPlay();
+    });
+    
+    // Navegación por puntos
+    dots.forEach(dot => {
+        dot.addEventListener('click', function() {
+            const slideIndex = parseInt(this.getAttribute('data-slide'));
+            showSlide(slideIndex);
+            stopAutoPlay();
+            startAutoPlay();
+        });
+    });
+    
+    // Pausar autoplay al interactuar con el carrusel
+    carousel.addEventListener('mouseenter', stopAutoPlay);
+    carousel.addEventListener('mouseleave', startAutoPlay);
+    
+    // Iniciar
+    showSlide(0);
+    startAutoPlay();
+}
+
+// ===== FILTRO DE SCRIPTS =====
+function initScriptsFilter() {
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const scriptCards = document.querySelectorAll('.script-card');
+    
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Actualizar botón activo
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Obtener filtro
+            const filter = this.getAttribute('data-filter');
+            
+            // Filtrar scripts
+            scriptCards.forEach(card => {
+                if (filter === 'all' || card.getAttribute('data-category') === filter) {
+                    card.style.display = 'block';
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, 10);
+                } else {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(20px)';
+                    setTimeout(() => {
+                        card.style.display = 'none';
+                    }, 300);
+                }
+            });
+        });
+    });
+}
+
+// ===== FORMULARIO DE CONTACTO =====
+function initContactForm() {
+    const contactForm = document.getElementById('contactForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const btnText = document.getElementById('btnText');
+    const btnLoader = document.getElementById('btnLoader');
+    
+    contactForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Mostrar loader
+        btnText.textContent = 'Enviando...';
+        btnLoader.classList.remove('hidden');
+        submitBtn.disabled = true;
+        
+        // Obtener datos del formulario
+        const formData = {
+            name: document.getElementById('name').value,
+            email: document.getElementById('email').value,
+            company: document.getElementById('company').value,
+            message: document.getElementById('message').value
+        };
+        
+        // Enviar con EmailJS
+        emailjs.send('service_cybershield', 'template_contact', formData)
+            .then(function(response) {
+                // Éxito
+                btnText.textContent = '¡Mensaje Enviado!';
+                btnLoader.classList.add('hidden');
+                
+                // Resetear formulario después de un tiempo
+                setTimeout(() => {
+                    contactForm.reset();
+                    btnText.textContent = 'Enviar Mensaje';
+                    submitBtn.disabled = false;
+                }, 3000);
+                
+                // Mostrar notificación de éxito
+                showNotification('Mensaje enviado correctamente. Te contactaré pronto.', 'success');
+            }, function(error) {
+                // Error
+                btnText.textContent = 'Error al Enviar';
+                btnLoader.classList.add('hidden');
+                
+                // Restaurar después de un tiempo
+                setTimeout(() => {
+                    btnText.textContent = 'Enviar Mensaje';
+                    submitBtn.disabled = false;
+                }, 3000);
+                
+                // Mostrar notificación de error
+                showNotification('Error al enviar el mensaje. Inténtalo de nuevo.', 'error');
+            });
+    });
+}
+
+// ===== NOTIFICACIONES =====
+function showNotification(message, type) {
+    // Crear elemento de notificación
     const notification = document.createElement('div');
     notification.className = `notification ${type}`;
-    notification.textContent = msg;
-    
-    notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        padding: 12px 18px;
-        border-radius: 8px;
-        color: #fff;
-        z-index: 10050;
-        font-weight: 700;
-        transform: translateX(100%);
-        opacity: 0;
-        box-shadow: 0 8px 30px rgba(0,0,0,0.25);
-        transition: all 0.3s ease;
+    notification.innerHTML = `
+        <div class="notification-content">
+            <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
+            <span>${message}</span>
+        </div>
     `;
     
-    // Colores según el tipo
-    switch(type) {
-        case 'success':
-            notification.style.background = '#16a34a';
-            break;
-        case 'error':
-            notification.style.background = '#dc2626';
-            break;
-        default:
-            notification.style.background = '#0ea5a4';
-    }
+    // Estilos de notificación
+    notification.style.cssText = `
+        position: fixed;
+        top: 100px;
+        right: 30px;
+        background: ${type === 'success' ? 'rgba(100, 255, 218, 0.9)' : 'rgba(255, 100, 100, 0.9)'};
+        color: var(--primary-dark);
+        padding: 15px 25px;
+        border-radius: 8px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        z-index: 10000;
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+        font-weight: 600;
+        max-width: 400px;
+    `;
     
     document.body.appendChild(notification);
     
     // Animación de entrada
     setTimeout(() => {
         notification.style.transform = 'translateX(0)';
-        notification.style.opacity = '1';
-    }, 50);
+    }, 10);
     
-    // Animación de salida después de 4 segundos
+    // Remover después de 5 segundos
     setTimeout(() => {
         notification.style.transform = 'translateX(100%)';
-        notification.style.opacity = '0';
         setTimeout(() => {
-            if (notification.parentNode) {
-                notification.parentNode.removeChild(notification);
-            }
+            document.body.removeChild(notification);
         }, 300);
-    }, 4000);
+    }, 5000);
 }
 
-/* ------------------- CAROUSEL ------------------- */
-function initCarousel(){
-    const slides = $all('.carousel-slide');
-    const dots = $all('.dot');
-    const prev = $('#carouselPrev');
-    const next = $('#carouselNext');
+// ===== BOTÓN FLOTANTE =====
+function initFloatingButton() {
+    const floatingBtn = document.getElementById('floatingBtn');
     
-    if (slides.length === 0) return;
-    
-    let currentIndex = slides.findIndex(s => s.classList.contains('active'));
-    if(currentIndex === -1) {
-        currentIndex = 0;
-        slides[0].classList.add('active');
-        if (dots.length > 0) dots[0].classList.add('active');
-    }
-    
-    let carouselTimer = null;
-
-    function goToSlide(index){
-        // Validar índice
-        if (index < 0) index = slides.length - 1;
-        if (index >= slides.length) index = 0;
-        
-        // Remover clase active de todos
-        slides.forEach(s => s.classList.remove('active'));
-        dots.forEach(d => d.classList.remove('active'));
-        
-        // Añadir clase active al slide y dot actual
-        slides[index].classList.add('active');
-        if (dots[index]) {
-            dots[index].classList.add('active');
-        }
-        
-        currentIndex = index;
-    }
-
-    function nextSlide(){
-        goToSlide(currentIndex + 1);
-    }
-    
-    function prevSlide(){
-        goToSlide(currentIndex - 1);
-    }
-
-    // Event listeners para botones
-    if (next) {
-        next.addEventListener('click', () => {
-            nextSlide();
-            resetCarouselTimer();
-        });
-    }
-    
-    if (prev) {
-        prev.addEventListener('click', () => {
-            prevSlide();
-            resetCarouselTimer();
-        });
-    }
-
-    // Event listeners para dots
-    dots.forEach((dot, index) => {
-        dot.addEventListener('click', () => {
-            goToSlide(index);
-            resetCarouselTimer();
+    floatingBtn.addEventListener('click', function() {
+        // Scroll al inicio
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
         });
     });
-
-    function startCarouselTimer(){ 
-        carouselTimer = setInterval(nextSlide, 8000); 
-    }
     
-    function resetCarouselTimer(){ 
-        clearInterval(carouselTimer); 
-        startCarouselTimer(); 
-    }
-
-    startCarouselTimer();
+    // Mostrar/ocultar botón según scroll
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 500) {
+            floatingBtn.style.display = 'flex';
+        } else {
+            floatingBtn.style.display = 'none';
+        }
+    });
 }
 
-/* ------------------- CLOCK ------------------- */
-function startClock(){
-    const clockEl = document.getElementById('clock');
-    const dateEl = document.getElementById('date');
+// ===== BANNER DE COOKIES =====
+function initCookiesBanner() {
+    const cookiesBanner = document.getElementById('cookiesBanner');
+    const cookieAccept = document.getElementById('cookieAccept');
+    const cookieSettings = document.getElementById('cookieSettings');
     
-    function updateClock(){
+    // Verificar si ya se aceptaron las cookies
+    if (!localStorage.getItem('cookiesAccepted')) {
+        // Mostrar banner después de 2 segundos
+        setTimeout(() => {
+            cookiesBanner.classList.remove('hidden');
+        }, 2000);
+    }
+    
+    // Aceptar cookies
+    cookieAccept.addEventListener('click', function() {
+        localStorage.setItem('cookiesAccepted', 'true');
+        cookiesBanner.classList.add('hidden');
+    });
+    
+    // Configurar cookies
+    cookieSettings.addEventListener('click', function() {
+        // Aquí iría la lógica para configuraciones más detalladas
+        alert('Configuración de cookies: Esta página utiliza cookies esenciales para su funcionamiento.');
+    });
+}
+
+// ===== RELOJ EN FOOTER =====
+function initClock() {
+    const clockElement = document.getElementById('clock');
+    const dateElement = document.getElementById('date');
+    
+    function updateClock() {
         const now = new Date();
         
         // Formatear hora
-        const timeStr = now.toLocaleTimeString('es-ES', {
-            hour12: false,
-            timeZone: 'Europe/Madrid'
-        });
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
         
         // Formatear fecha
-        const dateStr = now.toLocaleDateString('es-ES', {
-            weekday: 'long',
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric',
-            timeZone: 'Europe/Madrid'
-        });
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        const dateString = now.toLocaleDateString('es-ES', options);
         
-        if(clockEl) clockEl.textContent = timeStr;
-        if(dateEl) {
-            dateEl.textContent = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
-        }
+        // Actualizar elementos
+        clockElement.textContent = `${hours}:${minutes}:${seconds}`;
+        dateElement.textContent = dateString;
     }
     
+    // Actualizar cada segundo
     updateClock();
     setInterval(updateClock, 1000);
 }
 
-/* ------------------- PARTICLES (canvas mejorado) ------------------- */
-function initParticles(){
-    // Cancelar animación anterior si existe
-    if (particleAnimation) {
-        cancelAnimationFrame(particleAnimation);
-    }
+// ===== ANIMACIONES AL SCROLL =====
+function initScrollAnimations() {
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
     
-    const canvas = document.getElementById('particleCanvas');
-    if(!canvas) return;
-    
-    const ctx = canvas.getContext('2d');
-    let width = canvas.width = window.innerWidth;
-    let height = canvas.height = window.innerHeight;
-
-    const particles = [];
-    const particleCount = Math.max(40, Math.floor((width * height) / 90000));
-    
-    // Configuración basada en el tema
-    const isLightMode = document.body.classList.contains('light-mode');
-    
-    // Colores diferentes para cada modo
-    const darkModeColors = ['rgba(100, 255, 218,', 'rgba(138, 255, 223,', 'rgba(76, 201, 240,'];
-    const lightModeColors = ['rgba(15, 118, 110,', 'rgba(13, 148, 136,', 'rgba(20, 184, 166,'];
-    const currentColors = isLightMode ? lightModeColors : darkModeColors;
-
-    // Crear partículas
-    for(let i = 0; i < particleCount; i++) {
-        particles.push({
-            x: Math.random() * width,
-            y: Math.random() * height,
-            radius: 0.8 + Math.random() * 2.2,
-            velocityX: (Math.random() - 0.5) * 0.4,
-            velocityY: (Math.random() - 0.5) * 0.4,
-            alpha: 0.15 + Math.random() * 0.5,
-            color: currentColors[Math.floor(Math.random() * currentColors.length)]
-        });
-    }
-
-    function handleResize(){ 
-        width = canvas.width = window.innerWidth;
-        height = canvas.height = window.innerHeight;
-        
-        // Recrear partículas al redimensionar
-        particles.length = 0;
-        for(let i = 0; i < particleCount; i++) {
-            particles.push({
-                x: Math.random() * width,
-                y: Math.random() * height,
-                radius: 0.8 + Math.random() * 2.2,
-                velocityX: (Math.random() - 0.5) * 0.4,
-                velocityY: (Math.random() - 0.5) * 0.4,
-                alpha: 0.15 + Math.random() * 0.5,
-                color: currentColors[Math.floor(Math.random() * currentColors.length)]
-            });
-        }
-    }
-
-    window.addEventListener('resize', handleResize);
-
-    function animateParticles(){
-        ctx.clearRect(0, 0, width, height);
-        
-        // Dibujar y actualizar partículas
-        for(const particle of particles){
-            // Actualizar posición
-            particle.x += particle.velocityX;
-            particle.y += particle.velocityY;
-            
-            // Rebote en los bordes
-            if(particle.x < -50) particle.x = width + 50;
-            if(particle.x > width + 50) particle.x = -50;
-            if(particle.y < -50) particle.y = height + 50;
-            if(particle.y > height + 50) particle.y = -50;
-            
-            // Dibujar partícula
-            ctx.beginPath();
-            ctx.fillStyle = particle.color + particle.alpha + ')';
-            ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
-            ctx.fill();
-            
-            // Conexiones entre partículas cercanas
-            for(const otherParticle of particles){
-                const distanceX = particle.x - otherParticle.x;
-                const distanceY = particle.y - otherParticle.y;
-                const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
-                
-                if(distance < 100){
-                    ctx.beginPath();
-                    ctx.strokeStyle = particle.color + (0.1 * (1 - distance/100)) + ')';
-                    ctx.lineWidth = 0.5;
-                    ctx.moveTo(particle.x, particle.y);
-                    ctx.lineTo(otherParticle.x, otherParticle.y);
-                    ctx.stroke();
-                }
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
             }
-        }
-        
-        particleAnimation = requestAnimationFrame(animateParticles);
-    }
+        });
+    }, observerOptions);
     
-    animateParticles();
+    // Observar elementos para animar
+    const elementsToAnimate = document.querySelectorAll('.skill-card, .script-card, .about-text, .contact-info');
+    elementsToAnimate.forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(30px)';
+        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(el);
+    });
 }
+
+// ===== MENÚ MÓVIL =====
+function initMobileMenu() {
+    const mobileMenu = document.querySelector('.mobile-menu');
+    const navLinks = document.querySelector('.nav-links');
+    
+    mobileMenu.addEventListener('click', function() {
+        navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+    });
+    
+    // Cerrar menú al hacer clic en un enlace
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', function() {
+            if (window.innerWidth <= 768) {
+                navLinks.style.display = 'none';
+            }
+        });
+    });
+    
+    // Ajustar menú al cambiar tamaño de ventana
+    window.addEventListener('resize', function() {
+        if (window.innerWidth > 768) {
+            navLinks.style.display = 'flex';
+        } else {
+            navLinks.style.display = 'none';
+        }
+    });
+}
+
+// ===== ACTUALIZAR AÑO EN FOOTER =====
+document.getElementById('year').textContent = new Date().getFullYear();

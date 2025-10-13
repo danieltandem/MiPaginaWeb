@@ -109,13 +109,12 @@ function resizeCanvas() {
 const themeToggle = document.getElementById('themeToggle');
 const themeIcon = themeToggle.querySelector('i');
 
-// Verificar preferencia del usuario
-if (localStorage.getItem('theme') === 'light' || 
-    (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches)) {
-    document.body.classList.add('light-mode');
-    themeIcon.classList.remove('fa-moon');
-    themeIcon.classList.add('fa-sun');
-}
+// FORZAR MODO OSCURO COMO PRINCIPAL - ELIMINAR DETECCIÓN AUTOMÁTICA
+// Siempre empezar en modo oscuro
+document.body.classList.remove('light-mode');
+themeIcon.classList.remove('fa-sun');
+themeIcon.classList.add('fa-moon');
+localStorage.setItem('theme', 'dark');
 
 // Alternar tema
 themeToggle.addEventListener('click', () => {
@@ -452,7 +451,7 @@ function initMobileMenu() {
     });
 }
 
-// ===== CARRUSEL DE SCRIPTS =====
+// ===== CARRUSEL DE SCRIPTS - MEJORADO PARA MÓVILES =====
 function initScriptsCarousel() {
     const scriptsCarousel = document.getElementById('scriptsCarousel');
     const scriptsPrev = document.getElementById('scriptsPrev');
@@ -463,7 +462,18 @@ function initScriptsCarousel() {
     
     let currentScriptSlide = 0;
     const scriptCardsElements = document.querySelectorAll('#scriptsCarousel .script-card');
-    let scriptsPerView = 3;
+    let scriptsPerView = getScriptsPerView();
+
+    // Función para determinar cuántos scripts mostrar según el ancho
+    function getScriptsPerView() {
+        if (window.innerWidth < 768) {
+            return 1;
+        } else if (window.innerWidth < 1200) {
+            return 2;
+        } else {
+            return 3;
+        }
+    }
 
     // Inicializar puntos del carrusel de scripts
     function initScriptsDots() {
@@ -487,7 +497,12 @@ function initScriptsCarousel() {
         if (slideIndex >= totalSlides) slideIndex = 0;
         
         currentScriptSlide = slideIndex;
-        const cardWidth = scriptCardsElements[0].offsetWidth + 30; // Ancho + gap
+        
+        // Calcular posición de scroll
+        const card = scriptCardsElements[0];
+        if (!card) return;
+        
+        const cardWidth = card.offsetWidth + 30; // Ancho + gap
         const scrollPosition = currentScriptSlide * cardWidth * scriptsPerView;
         
         scriptsCarousel.scrollTo({
@@ -512,22 +527,43 @@ function initScriptsCarousel() {
 
     // Ajustar scripts por vista según el tamaño de pantalla
     function adjustScriptsPerView() {
-        if (window.innerWidth < 768) {
-            scriptsPerView = 1;
-        } else if (window.innerWidth < 1200) {
-            scriptsPerView = 2;
-        } else {
-            scriptsPerView = 3;
-        }
+        scriptsPerView = getScriptsPerView();
         initScriptsDots();
         goToScriptSlide(0);
+    }
+
+    // Swipe para móviles
+    let startX = 0;
+    let endX = 0;
+    
+    scriptsCarousel.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX;
+    });
+    
+    scriptsCarousel.addEventListener('touchend', (e) => {
+        endX = e.changedTouches[0].clientX;
+        handleSwipe();
+    });
+    
+    function handleSwipe() {
+        const swipeThreshold = 50;
+        const diff = startX - endX;
+        
+        if (Math.abs(diff) > swipeThreshold) {
+            if (diff > 0) {
+                // Swipe izquierda - siguiente
+                goToScriptSlide(currentScriptSlide + 1);
+            } else {
+                // Swipe derecha - anterior
+                goToScriptSlide(currentScriptSlide - 1);
+            }
+        }
     }
 
     // Inicializar carrusel de scripts
     adjustScriptsPerView();
     window.addEventListener('resize', adjustScriptsPerView);
 }
-
 // ===== INICIALIZACIÓN =====
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM completamente cargado'); // Debug

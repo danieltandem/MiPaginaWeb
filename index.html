@@ -22,30 +22,31 @@
     <!-- Canvas para el fondo de partículas -->
     <canvas id="particleCanvas"></canvas>
 
-    <!-- Header -->
-    <header>
-        <div class="container">
-            <nav class="navbar">
-                <a href="#" class="logo">
-                    <i class="fas fa-shield-alt logo-icon"></i>
-                    <span class="logo-text">D V M</span>
-                </a>
-                <ul class="nav-links">
-                    <li><a href="#about">Sobre Mí</a></li>
-                    <li><a href="#skills">Habilidades</a></li>
-                    <li><a href="#certifications">Certificaciones</a></li>
-                    <li><a href="#scripts">Scripts</a></li>
-                    <li><a href="#contact">Contacto</a></li>
-                    <li>
-                        <button class="theme-toggle" id="themeToggle">
-                            <i class="fas fa-moon"></i>
-                        </button>
-                    </li>
-                </ul>
-                <div class="mobile-menu">☰</div>
-            </nav>
-        </div>
-    </header>
+<!-- Header -->
+<header>
+    <div class="container">
+        <nav class="navbar">
+            <!-- CAMBIA ESTA LÍNEA: cambia href="#" por href="#home" -->
+            <a href="#home" class="logo">
+                <i class="fas fa-shield-alt logo-icon"></i>
+                <span class="logo-text">D V M</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#about">Sobre Mí</a></li>
+                <li><a href="#skills">Habilidades</a></li>
+                <li><a href="#certifications">Certificaciones</a></li>
+                <li><a href="#scripts">Scripts</a></li>
+                <li><a href="#contact">Contacto</a></li>
+                <li>
+                    <button class="theme-toggle" id="themeToggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </li>
+            </ul>
+            <div class="mobile-menu">☰</div>
+        </nav>
+    </div>
+</header>
 
     <!-- HERO -->
     <section class="hero" id="home">
@@ -338,7 +339,7 @@
                 </div>
                 <div class="script-card" data-category="forensic">
                     <div class="script-image">
-                        <img src="img/MineLand.png" alt="Vista previa de MineLand" />
+                        <img src="img/Mineland.png" alt="Vista previa de MineLand" />
                     </div>
                     <div class="script-content">
                         <div class="script-tags">
@@ -348,8 +349,8 @@
                         <h3><strong>MineLand</strong></h3>
                         <p><strong>MineLand es un prototipo de pagina web de videojuegos infantiles que hice para practicar mis habilidades de desarrollo web.</strong></p>
                         <div class="script-links">
-                            <a href="#" class="script-link">GitHub</a>
-                            <a href="#" class="script-link">Enlace</a>
+                            <a href="https://github.com/danieltandem/Mineland" class="script-link">GitHub</a>
+                            <a href="https://danieltandem.github.io/Mineland" class="script-link">Enlace</a>
                         </div>
                     </div>
                 </div>
@@ -440,10 +441,10 @@
     <div class="container">
         <div class="footer-content">
             <div class="footer-column">
-                <div class="footer-logo">
+                <a href="#home" class="footer-logo">
                     <i class="fas fa-shield-alt logo-icon"></i>
                     <span class="logo-text">D V M</span>
-                </div>
+                </a>
                 <p>Técnico especializado en ciberseguridad y desarrollo de scripts para proteger sistemas empresariales.</p>
                 <div class="footer-clock">
                     <div id="clock">--:--:--</div>

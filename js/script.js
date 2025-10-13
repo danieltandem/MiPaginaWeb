@@ -220,88 +220,68 @@ carouselDots.addEventListener('mouseleave', () => {
     }, 5000);
 });
 
-// ===== FILTRO DE SCRIPTS =====
-const filterButtons = document.querySelectorAll('.filter-btn');
-const scriptCards = document.querySelectorAll('.script-card');
-
-filterButtons.forEach(button => {
-    button.addEventListener('click', () => {
-        // Quitar clase active de todos los botones
-        filterButtons.forEach(btn => btn.classList.remove('active'));
-        // Añadir clase active al botón clickeado
-        button.classList.add('active');
-        
-        const filter = button.getAttribute('data-filter');
-        
-        scriptCards.forEach(card => {
-            if (filter === 'all' || card.getAttribute('data-category') === filter) {
-                card.style.display = 'block';
-                setTimeout(() => {
-                    card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
-                }, 100);
-            } else {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(20px)';
-                setTimeout(() => {
-                    card.style.display = 'none';
-                }, 300);
-            }
-        });
-    });
-});
-
-// ===== FORMULARIO DE CONTACTO =====
+// ===== FORMULARIO DE CONTACTO CORREGIDO =====
 const contactForm = document.getElementById('contactForm');
 const submitBtn = document.getElementById('submitBtn');
 const btnText = document.getElementById('btnText');
 const btnLoader = document.getElementById('btnLoader');
 
-contactForm.addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    // Mostrar loader
-    btnText.textContent = 'Enviando...';
-    btnLoader.classList.remove('hidden');
-    submitBtn.disabled = true;
-    
-    // Obtener datos del formulario
-    const formData = {
-        name: document.getElementById('name').value,
-        email: document.getElementById('email').value,
-        company: document.getElementById('company').value,
-        message: document.getElementById('message').value
-    };
-    
-    // Enviar email usando EmailJS
-    emailjs.send('service_cybershield', 'template_contact', formData)
-        .then(function(response) {
-            console.log('SUCCESS!', response.status, response.text);
-            
-            // Mostrar mensaje de éxito
-            btnText.textContent = '¡Mensaje Enviado!';
+if (contactForm) {
+    contactForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Mostrar loader
+        btnText.textContent = 'Enviando...';
+        btnLoader.classList.remove('hidden');
+        submitBtn.disabled = true;
+        
+        // Obtener datos del formulario
+        const formData = {
+            name: document.getElementById('name').value,
+            email: document.getElementById('email').value,
+            company: document.getElementById('company').value,
+            message: document.getElementById('message').value
+        };
+        
+        // Validación básica
+        if (!formData.name || !formData.email || !formData.message) {
+            alert('Por favor, completa todos los campos obligatorios.');
+            btnText.textContent = 'Enviar Mensaje';
             btnLoader.classList.add('hidden');
-            
-            // Resetear formulario después de 2 segundos
-            setTimeout(() => {
-                contactForm.reset();
-                btnText.textContent = 'Enviar Mensaje';
-                submitBtn.disabled = false;
-            }, 2000);
-        }, function(error) {
-            console.log('FAILED...', error);
-            
-            // Mostrar mensaje de error
-            btnText.textContent = 'Error, intenta de nuevo';
-            btnLoader.classList.add('hidden');
-            
-            // Restaurar después de 2 segundos
-            setTimeout(() => {
-                btnText.textContent = 'Enviar Mensaje';
-                submitBtn.disabled = false;
-            }, 2000);
-        });
-});
+            submitBtn.disabled = false;
+            return;
+        }
+        
+        // Enviar email usando EmailJS con tus datos reales
+        emailjs.send('service_0yae93w', 'template_z8fuguv', formData)
+            .then(function(response) {
+                console.log('SUCCESS!', response.status, response.text);
+                
+                // Mostrar mensaje de éxito
+                btnText.textContent = '¡Mensaje Enviado!';
+                btnLoader.classList.add('hidden');
+                
+                // Resetear formulario después de 2 segundos
+                setTimeout(() => {
+                    contactForm.reset();
+                    btnText.textContent = 'Enviar Mensaje';
+                    submitBtn.disabled = false;
+                }, 2000);
+            }, function(error) {
+                console.log('FAILED...', error);
+                
+                // Mostrar mensaje de error
+                btnText.textContent = 'Error, intenta de nuevo';
+                btnLoader.classList.add('hidden');
+                
+                // Restaurar después de 2 segundos
+                setTimeout(() => {
+                    btnText.textContent = 'Enviar Mensaje';
+                    submitBtn.disabled = false;
+                }, 2000);
+            });
+    });
+}
 
 // ===== RELOJ EN FOOTER =====
 function updateClock() {
@@ -312,33 +292,41 @@ function updateClock() {
     const minutes = String(now.getMinutes()).padStart(2, '0');
     const seconds = String(now.getSeconds()).padStart(2, '0');
     
-    document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
+    const clockElement = document.getElementById('clock');
+    if (clockElement) {
+        clockElement.textContent = `${hours}:${minutes}:${seconds}`;
+    }
     
     // Formatear fecha
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    document.getElementById('date').textContent = now.toLocaleDateString('es-ES', options);
+    const dateElement = document.getElementById('date');
+    if (dateElement) {
+        dateElement.textContent = now.toLocaleDateString('es-ES', options);
+    }
 }
 
 // ===== BOTÓN FLOTANTE =====
 const floatingBtn = document.getElementById('floatingBtn');
 
-floatingBtn.addEventListener('click', () => {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
+if (floatingBtn) {
+    floatingBtn.addEventListener('click', () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
     });
-});
 
-// Mostrar/ocultar botón flotante al hacer scroll
-window.addEventListener('scroll', () => {
-    if (window.scrollY > 500) {
-        floatingBtn.style.opacity = '1';
-        floatingBtn.style.visibility = 'visible';
-    } else {
-        floatingBtn.style.opacity = '0';
-        floatingBtn.style.visibility = 'hidden';
-    }
-});
+    // Mostrar/ocultar botón flotante al hacer scroll
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 500) {
+            floatingBtn.style.opacity = '1';
+            floatingBtn.style.visibility = 'visible';
+        } else {
+            floatingBtn.style.opacity = '0';
+            floatingBtn.style.visibility = 'hidden';
+        }
+    });
+}
 
 // ===== BANNER DE COOKIES =====
 const cookiesBanner = document.getElementById('cookiesBanner');
@@ -346,22 +334,26 @@ const cookieAccept = document.getElementById('cookieAccept');
 const cookieSettings = document.getElementById('cookieSettings');
 
 // Mostrar banner si no se ha aceptado
-if (!localStorage.getItem('cookiesAccepted')) {
+if (cookiesBanner && !localStorage.getItem('cookiesAccepted')) {
     setTimeout(() => {
         cookiesBanner.classList.remove('hidden');
     }, 2000);
 }
 
 // Aceptar cookies
-cookieAccept.addEventListener('click', () => {
-    localStorage.setItem('cookiesAccepted', 'true');
-    cookiesBanner.classList.add('hidden');
-});
+if (cookieAccept) {
+    cookieAccept.addEventListener('click', () => {
+        localStorage.setItem('cookiesAccepted', 'true');
+        cookiesBanner.classList.add('hidden');
+    });
+}
 
 // Configurar cookies
-cookieSettings.addEventListener('click', () => {
-    alert('Configuración de cookies: Esta página utiliza cookies esenciales para el funcionamiento del sitio.');
-});
+if (cookieSettings) {
+    cookieSettings.addEventListener('click', () => {
+        alert('Configuración de cookies: Esta página utiliza cookies esenciales para el funcionamiento del sitio.');
+    });
+}
 
 // ===== NAVEGACIÓN SUAVE =====
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -405,8 +397,141 @@ document.querySelectorAll('.skill-card, .script-card, .certification-card').forE
     element.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
 });
 
+// ===== MENÚ HAMBURGUESA - CÓDIGO CORREGIDO =====
+function initMobileMenu() {
+    const mobileMenu = document.querySelector('.mobile-menu');
+    const navLinks = document.querySelector('.nav-links');
+    
+    if (!mobileMenu || !navLinks) return;
+    
+    console.log('Inicializando menú hamburguesa...'); // Debug
+    
+    // Función para alternar el menú
+    function toggleMobileMenu() {
+        console.log('Toggle menu clicked'); // Debug
+        navLinks.classList.toggle('active');
+        mobileMenu.classList.toggle('active');
+        
+        // Cambiar el icono del menú
+        if (mobileMenu.classList.contains('active')) {
+            mobileMenu.innerHTML = '✕';
+        } else {
+            mobileMenu.innerHTML = '☰';
+        }
+    }
+    
+    // Event listener para el menú hamburguesa
+    mobileMenu.addEventListener('click', function(e) {
+        e.stopPropagation();
+        toggleMobileMenu();
+    });
+    
+    // Cerrar menú al hacer clic en un enlace
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', () => {
+            if (navLinks.classList.contains('active')) {
+                toggleMobileMenu();
+            }
+        });
+    });
+    
+    // Cerrar menú al hacer clic fuera
+    document.addEventListener('click', function(e) {
+        if (navLinks.classList.contains('active') && 
+            !navLinks.contains(e.target) && 
+            !mobileMenu.contains(e.target)) {
+            toggleMobileMenu();
+        }
+    });
+    
+    // Cerrar menú al redimensionar la ventana si es mayor a 768px
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 768 && navLinks.classList.contains('active')) {
+            toggleMobileMenu();
+        }
+    });
+}
+
+// ===== CARRUSEL DE SCRIPTS =====
+function initScriptsCarousel() {
+    const scriptsCarousel = document.getElementById('scriptsCarousel');
+    const scriptsPrev = document.getElementById('scriptsPrev');
+    const scriptsNext = document.getElementById('scriptsNext');
+    const scriptsDots = document.getElementById('scriptsDots');
+    
+    if (!scriptsCarousel || !scriptsPrev || !scriptsNext || !scriptsDots) return;
+    
+    let currentScriptSlide = 0;
+    const scriptCardsElements = document.querySelectorAll('#scriptsCarousel .script-card');
+    let scriptsPerView = 3;
+
+    // Inicializar puntos del carrusel de scripts
+    function initScriptsDots() {
+        scriptsDots.innerHTML = '';
+        const totalSlides = Math.ceil(scriptCardsElements.length / scriptsPerView);
+        
+        for (let i = 0; i < totalSlides; i++) {
+            const dot = document.createElement('span');
+            dot.classList.add('scripts-dot');
+            if (i === 0) dot.classList.add('active');
+            dot.setAttribute('data-slide', i);
+            dot.addEventListener('click', () => goToScriptSlide(i));
+            scriptsDots.appendChild(dot);
+        }
+    }
+
+    // Ir a slide específico de scripts
+    function goToScriptSlide(slideIndex) {
+        const totalSlides = Math.ceil(scriptCardsElements.length / scriptsPerView);
+        if (slideIndex < 0) slideIndex = totalSlides - 1;
+        if (slideIndex >= totalSlides) slideIndex = 0;
+        
+        currentScriptSlide = slideIndex;
+        const cardWidth = scriptCardsElements[0].offsetWidth + 30; // Ancho + gap
+        const scrollPosition = currentScriptSlide * cardWidth * scriptsPerView;
+        
+        scriptsCarousel.scrollTo({
+            left: scrollPosition,
+            behavior: 'smooth'
+        });
+        
+        // Actualizar puntos
+        document.querySelectorAll('.scripts-dot').forEach((dot, index) => {
+            dot.classList.toggle('active', index === currentScriptSlide);
+        });
+    }
+
+    // Event listeners para controles del carrusel de scripts
+    scriptsPrev.addEventListener('click', () => {
+        goToScriptSlide(currentScriptSlide - 1);
+    });
+
+    scriptsNext.addEventListener('click', () => {
+        goToScriptSlide(currentScriptSlide + 1);
+    });
+
+    // Ajustar scripts por vista según el tamaño de pantalla
+    function adjustScriptsPerView() {
+        if (window.innerWidth < 768) {
+            scriptsPerView = 1;
+        } else if (window.innerWidth < 1200) {
+            scriptsPerView = 2;
+        } else {
+            scriptsPerView = 3;
+        }
+        initScriptsDots();
+        goToScriptSlide(0);
+    }
+
+    // Inicializar carrusel de scripts
+    adjustScriptsPerView();
+    window.addEventListener('resize', adjustScriptsPerView);
+}
+
 // ===== INICIALIZACIÓN =====
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM completamente cargado'); // Debug
+    
     // Inicializar partículas
     initParticles();
     animateParticles();
@@ -419,7 +544,10 @@ document.addEventListener('DOMContentLoaded', function() {
     setInterval(updateClock, 1000);
     
     // Inicializar año en copyright
-    document.getElementById('year').textContent = new Date().getFullYear();
+    const yearElement = document.getElementById('year');
+    if (yearElement) {
+        yearElement.textContent = new Date().getFullYear();
+    }
     
     // Comprobar scroll para animaciones
     window.addEventListener('scroll', checkScroll);
@@ -428,22 +556,30 @@ document.addEventListener('DOMContentLoaded', function() {
     // Redimensionar canvas al cambiar tamaño de ventana
     window.addEventListener('resize', resizeCanvas);
     
+    // Inicializar menú hamburguesa
+    initMobileMenu();
+    
+    // Inicializar carrusel de scripts
+    initScriptsCarousel();
+    
     // Efecto de escritura para el subtítulo del héroe
     const subtitle = document.querySelector('.hero .subtitle');
-    const originalText = subtitle.textContent;
-    subtitle.textContent = '';
-    
-    let i = 0;
-    function typeWriter() {
-        if (i < originalText.length) {
-            subtitle.textContent += originalText.charAt(i);
-            i++;
-            setTimeout(typeWriter, 100);
+    if (subtitle) {
+        const originalText = subtitle.textContent;
+        subtitle.textContent = '';
+        
+        let i = 0;
+        function typeWriter() {
+            if (i < originalText.length) {
+                subtitle.textContent += originalText.charAt(i);
+                i++;
+                setTimeout(typeWriter, 100);
+            }
         }
+        
+        // Iniciar efecto de escritura después de un breve retraso
+        setTimeout(typeWriter, 1000);
     }
-    
-    // Iniciar efecto de escritura después de un breve retraso
-    setTimeout(typeWriter, 1000);
 });
 
 // Efecto de partículas en el card del héroe
@@ -467,75 +603,3 @@ if (heroCard) {
         heroCard.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
     });
 }
-// ===== CARRUSEL DE SCRIPTS =====
-const scriptsCarousel = document.getElementById('scriptsCarousel');
-const scriptsPrev = document.getElementById('scriptsPrev');
-const scriptsNext = document.getElementById('scriptsNext');
-const scriptsDots = document.getElementById('scriptsDots');
-let currentScriptSlide = 0;
-const scriptCardsElements = document.querySelectorAll('#scriptsCarousel .script-card');
-let scriptsPerView = 3;
-
-// Inicializar puntos del carrusel de scripts
-function initScriptsDots() {
-    scriptsDots.innerHTML = '';
-    const totalSlides = Math.ceil(scriptCardsElements.length / scriptsPerView);
-    
-    for (let i = 0; i < totalSlides; i++) {
-        const dot = document.createElement('span');
-        dot.classList.add('scripts-dot');
-        if (i === 0) dot.classList.add('active');
-        dot.setAttribute('data-slide', i);
-        dot.addEventListener('click', () => goToScriptSlide(i));
-        scriptsDots.appendChild(dot);
-    }
-}
-
-// Ir a slide específico de scripts
-function goToScriptSlide(slideIndex) {
-    const totalSlides = Math.ceil(scriptCardsElements.length / scriptsPerView);
-    if (slideIndex < 0) slideIndex = totalSlides - 1;
-    if (slideIndex >= totalSlides) slideIndex = 0;
-    
-    currentScriptSlide = slideIndex;
-    const cardWidth = scriptCardsElements[0].offsetWidth + 30; // Ancho + gap
-    const scrollPosition = currentScriptSlide * cardWidth * scriptsPerView;
-    
-    scriptsCarousel.scrollTo({
-        left: scrollPosition,
-        behavior: 'smooth'
-    });
-    
-    // Actualizar puntos
-    document.querySelectorAll('.scripts-dot').forEach((dot, index) => {
-        dot.classList.toggle('active', index === currentScriptSlide);
-    });
-}
-
-// Event listeners para controles del carrusel de scripts
-scriptsPrev.addEventListener('click', () => {
-    goToScriptSlide(currentScriptSlide - 1);
-});
-
-scriptsNext.addEventListener('click', () => {
-    goToScriptSlide(currentScriptSlide + 1);
-});
-
-// Ajustar scripts por vista según el tamaño de pantalla
-function adjustScriptsPerView() {
-    if (window.innerWidth < 768) {
-        scriptsPerView = 1;
-    } else if (window.innerWidth < 1200) {
-        scriptsPerView = 2;
-    } else {
-        scriptsPerView = 3;
-    }
-    initScriptsDots();
-    goToScriptSlide(0);
-}
-
-// Inicializar carrusel de scripts al cargar
-document.addEventListener('DOMContentLoaded', function() {
-    adjustScriptsPerView();
-    window.addEventListener('resize', adjustScriptsPerView);
-});

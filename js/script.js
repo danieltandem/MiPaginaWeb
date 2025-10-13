@@ -1,493 +1,541 @@
-// ===== INICIALIZACIÓN =====
-document.addEventListener('DOMContentLoaded', function() {
-    // Inicializar todas las funcionalidades
-    initTheme();
+// ===== PARTICLES BACKGROUND =====
+const canvas = document.getElementById('particleCanvas');
+const ctx = canvas.getContext('2d');
+
+// Configuración del canvas
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+// Configuración de partículas
+const particles = [];
+const particleCount = 80;
+
+// Colores para modo oscuro y claro
+const darkModeColors = ['#64ffda', '#8affdf', '#a8fff0', '#ccd6f6'];
+const lightModeColors = ['#0f766e', '#0d9488', '#14b8a6', '#475569'];
+
+// Clase para partículas
+class Particle {
+    constructor() {
+        this.reset();
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+    }
+    
+    reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 3 + 1;
+        this.speedX = Math.random() * 2 - 1;
+        this.speedY = Math.random() * 2 - 1;
+        this.color = document.body.classList.contains('light-mode') 
+            ? lightModeColors[Math.floor(Math.random() * lightModeColors.length)]
+            : darkModeColors[Math.floor(Math.random() * darkModeColors.length)];
+        this.opacity = Math.random() * 0.6 + 0.2;
+    }
+    
+    update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        
+        // Rebotar en los bordes
+        if (this.x > canvas.width || this.x < 0) this.speedX *= -1;
+        if (this.y > canvas.height || this.y < 0) this.speedY *= -1;
+        
+        // Cambiar opacidad para efecto de parpadeo
+        this.opacity += (Math.random() - 0.5) * 0.05;
+        this.opacity = Math.max(0.2, Math.min(0.8, this.opacity));
+    }
+    
+    draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.globalAlpha = this.opacity;
+        ctx.fill();
+    }
+}
+
+// Inicializar partículas
+function initParticles() {
+    particles.length = 0;
+    for (let i = 0; i < particleCount; i++) {
+        particles.push(new Particle());
+    }
+}
+
+// Animación de partículas
+function animateParticles() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Dibujar conexiones entre partículas
+    for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            
+            if (distance < 150) {
+                ctx.beginPath();
+                ctx.strokeStyle = document.body.classList.contains('light-mode') 
+                    ? 'rgba(15, 118, 110, 0.1)' 
+                    : 'rgba(100, 255, 218, 0.1)';
+                ctx.lineWidth = 0.5;
+                ctx.globalAlpha = 0.3 * (1 - distance / 150);
+                ctx.moveTo(particles[i].x, particles[i].y);
+                ctx.lineTo(particles[j].x, particles[j].y);
+                ctx.stroke();
+            }
+        }
+    }
+    
+    // Actualizar y dibujar partículas
+    particles.forEach(particle => {
+        particle.update();
+        particle.draw();
+    });
+    
+    requestAnimationFrame(animateParticles);
+}
+
+// Redimensionar canvas
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
     initParticles();
-    initCarousel();
-    initScriptsFilter();
-    initContactForm();
-    initFloatingButton();
-    initCookiesBanner();
-    initClock();
-    initScrollAnimations();
-    initMobileMenu();
+}
+
+// ===== TOGGLE MODO CLARO/OSCURO =====
+const themeToggle = document.getElementById('themeToggle');
+const themeIcon = themeToggle.querySelector('i');
+
+// Verificar preferencia del usuario
+if (localStorage.getItem('theme') === 'light' || 
+    (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches)) {
+    document.body.classList.add('light-mode');
+    themeIcon.classList.remove('fa-moon');
+    themeIcon.classList.add('fa-sun');
+}
+
+// Alternar tema
+themeToggle.addEventListener('click', () => {
+    document.body.classList.toggle('light-mode');
+    
+    if (document.body.classList.contains('light-mode')) {
+        themeIcon.classList.remove('fa-moon');
+        themeIcon.classList.add('fa-sun');
+        localStorage.setItem('theme', 'light');
+    } else {
+        themeIcon.classList.remove('fa-sun');
+        themeIcon.classList.add('fa-moon');
+        localStorage.setItem('theme', 'dark');
+    }
+    
+    // Actualizar colores de partículas
+    particles.forEach(particle => {
+        particle.color = document.body.classList.contains('light-mode') 
+            ? lightModeColors[Math.floor(Math.random() * lightModeColors.length)]
+            : darkModeColors[Math.floor(Math.random() * darkModeColors.length)];
+    });
 });
 
-// ===== TEMA CLARO/OSCURO =====
-function initTheme() {
-    const themeToggle = document.getElementById('themeToggle');
-    const themeIcon = themeToggle.querySelector('i');
-    
-    // Verificar preferencia guardada
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'light') {
-        document.body.classList.add('light-mode');
-        themeIcon.classList.replace('fa-moon', 'fa-sun');
-    }
-    
-    themeToggle.addEventListener('click', function() {
-        document.body.classList.toggle('light-mode');
-        
-        if (document.body.classList.contains('light-mode')) {
-            themeIcon.classList.replace('fa-moon', 'fa-sun');
-            localStorage.setItem('theme', 'light');
-        } else {
-            themeIcon.classList.replace('fa-sun', 'fa-moon');
-            localStorage.setItem('theme', 'dark');
-        }
+// ===== CARRUSEL =====
+const carouselSlides = document.querySelectorAll('.carousel-slide');
+const carouselPrev = document.getElementById('carouselPrev');
+const carouselNext = document.getElementById('carouselNext');
+const carouselDots = document.getElementById('carouselDots');
+let currentSlide = 0;
+
+// Inicializar puntos del carrusel
+function initCarouselDots() {
+    carouselDots.innerHTML = '';
+    carouselSlides.forEach((_, index) => {
+        const dot = document.createElement('span');
+        dot.classList.add('dot');
+        if (index === 0) dot.classList.add('active');
+        dot.setAttribute('data-slide', index);
+        dot.addEventListener('click', () => goToSlide(index));
+        carouselDots.appendChild(dot);
     });
 }
 
-// ===== FONDO DE PARTÍCULAS MEJORADO =====
-function initParticles() {
-    const canvas = document.getElementById('particleCanvas');
-    const ctx = canvas.getContext('2d');
+// Ir a slide específico
+function goToSlide(slideIndex) {
+    carouselSlides[currentSlide].classList.remove('active');
+    carouselDots.children[currentSlide].classList.remove('active');
     
-    // Ajustar tamaño del canvas
-    function resizeCanvas() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-    }
+    currentSlide = slideIndex;
     
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
-    
-    // Configuración de partículas
-    const particles = [];
-    const particleCount = 80;
-    
-    // Colores para modo oscuro y claro
-    const darkColors = ['#64ffda', '#8affdf', '#a8fff0', '#ccd6f6'];
-    const lightColors = ['#0f766e', '#0d9488', '#14b8a6', '#2dd4bf', '#5eead4'];
-    
-    // Crear partículas
-    function createParticles() {
-        particles.length = 0;
-        
-        for (let i = 0; i < particleCount; i++) {
-            particles.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                size: Math.random() * 3 + 1,
-                speedX: (Math.random() - 0.5) * 1,
-                speedY: (Math.random() - 0.5) * 1,
-                color: document.body.classList.contains('light-mode') 
-                    ? lightColors[Math.floor(Math.random() * lightColors.length)]
-                    : darkColors[Math.floor(Math.random() * darkColors.length)]
-            });
-        }
-    }
-    
-    // Dibujar partículas
-    function drawParticles() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
-        // Actualizar colores si cambia el tema
-        const isLightMode = document.body.classList.contains('light-mode');
-        const colors = isLightMode ? lightColors : darkColors;
-        
-        particles.forEach(particle => {
-            // Actualizar posición
-            particle.x += particle.speedX;
-            particle.y += particle.speedY;
-            
-            // Rebotar en los bordes
-            if (particle.x < 0 || particle.x > canvas.width) particle.speedX *= -1;
-            if (particle.y < 0 || particle.y > canvas.height) particle.speedY *= -1;
-            
-            // Actualizar color si es necesario
-            if (isLightMode && darkColors.includes(particle.color)) {
-                particle.color = colors[Math.floor(Math.random() * colors.length)];
-            } else if (!isLightMode && lightColors.includes(particle.color)) {
-                particle.color = colors[Math.floor(Math.random() * colors.length)];
-            }
-            
-            // Dibujar partícula
-            ctx.beginPath();
-            ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-            ctx.fillStyle = particle.color;
-            ctx.globalAlpha = document.body.classList.contains('light-mode') ? 0.9 : 0.7;
-            ctx.fill();
-            
-            // Dibujar conexiones
-            particles.forEach(otherParticle => {
-                const dx = particle.x - otherParticle.x;
-                const dy = particle.y - otherParticle.y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-                
-                if (distance < 100) {
-                    ctx.beginPath();
-                    ctx.strokeStyle = particle.color;
-                    ctx.globalAlpha = 0.2 * (1 - distance / 100);
-                    ctx.lineWidth = 0.5;
-                    ctx.moveTo(particle.x, particle.y);
-                    ctx.lineTo(otherParticle.x, otherParticle.y);
-                    ctx.stroke();
-                }
-            });
-        });
-        
-        requestAnimationFrame(drawParticles);
-    }
-    
-    createParticles();
-    drawParticles();
-    
-    // Recrear partículas al cambiar de tema
-    const observer = new MutationObserver(function(mutations) {
-        mutations.forEach(function(mutation) {
-            if (mutation.attributeName === 'class') {
-                createParticles();
-            }
-        });
-    });
-    
-    observer.observe(document.body, { attributes: true });
+    carouselSlides[currentSlide].classList.add('active');
+    carouselDots.children[currentSlide].classList.add('active');
 }
 
-// ===== CARRUSEL MEJORADO =====
-function initCarousel() {
-    const carousel = document.getElementById('aboutCarousel');
-    const slides = carousel.querySelectorAll('.carousel-slide');
-    const dots = carousel.querySelectorAll('.dot');
-    const prevBtn = document.getElementById('carouselPrev');
-    const nextBtn = document.getElementById('carouselNext');
-    
-    let currentSlide = 0;
-    let slideInterval;
-    
-    // Mostrar slide específico
-    function showSlide(index) {
-        // Ocultar todos los slides
-        slides.forEach(slide => slide.classList.remove('active'));
-        dots.forEach(dot => dot.classList.remove('active'));
-        
-        // Ajustar índice si está fuera de rango
-        if (index >= slides.length) currentSlide = 0;
-        else if (index < 0) currentSlide = slides.length - 1;
-        else currentSlide = index;
-        
-        // Mostrar slide actual
-        slides[currentSlide].classList.add('active');
-        dots[currentSlide].classList.add('active');
-    }
-    
-    // Siguiente slide
-    function nextSlide() {
-        showSlide(currentSlide + 1);
-    }
-    
-    // Slide anterior
-    function prevSlide() {
-        showSlide(currentSlide - 1);
-    }
-    
-    // Iniciar autoplay
-    function startAutoPlay() {
-        slideInterval = setInterval(nextSlide, 4000);
-    }
-    
-    // Detener autoplay
-    function stopAutoPlay() {
-        clearInterval(slideInterval);
-    }
-    
-    // Event listeners
-    nextBtn.addEventListener('click', function() {
-        nextSlide();
-        stopAutoPlay();
-        startAutoPlay();
-    });
-    
-    prevBtn.addEventListener('click', function() {
-        prevSlide();
-        stopAutoPlay();
-        startAutoPlay();
-    });
-    
-    // Navegación por puntos
-    dots.forEach(dot => {
-        dot.addEventListener('click', function() {
-            const slideIndex = parseInt(this.getAttribute('data-slide'));
-            showSlide(slideIndex);
-            stopAutoPlay();
-            startAutoPlay();
-        });
-    });
-    
-    // Pausar autoplay al interactuar con el carrusel
-    carousel.addEventListener('mouseenter', stopAutoPlay);
-    carousel.addEventListener('mouseleave', startAutoPlay);
-    
-    // Iniciar
-    showSlide(0);
-    startAutoPlay();
-}
+// Event listeners para controles del carrusel
+carouselPrev.addEventListener('click', () => {
+    let newSlide = currentSlide - 1;
+    if (newSlide < 0) newSlide = carouselSlides.length - 1;
+    goToSlide(newSlide);
+});
+
+carouselNext.addEventListener('click', () => {
+    let newSlide = currentSlide + 1;
+    if (newSlide >= carouselSlides.length) newSlide = 0;
+    goToSlide(newSlide);
+});
+
+// Autoavance del carrusel
+let carouselInterval = setInterval(() => {
+    let newSlide = currentSlide + 1;
+    if (newSlide >= carouselSlides.length) newSlide = 0;
+    goToSlide(newSlide);
+}, 5000);
+
+// Pausar autoavance al interactuar
+carouselPrev.addEventListener('mouseenter', () => clearInterval(carouselInterval));
+carouselNext.addEventListener('mouseenter', () => clearInterval(carouselInterval));
+carouselDots.addEventListener('mouseenter', () => clearInterval(carouselInterval));
+
+// Reanudar autoavance al salir
+carouselPrev.addEventListener('mouseleave', () => {
+    carouselInterval = setInterval(() => {
+        let newSlide = currentSlide + 1;
+        if (newSlide >= carouselSlides.length) newSlide = 0;
+        goToSlide(newSlide);
+    }, 5000);
+});
+
+carouselNext.addEventListener('mouseleave', () => {
+    carouselInterval = setInterval(() => {
+        let newSlide = currentSlide + 1;
+        if (newSlide >= carouselSlides.length) newSlide = 0;
+        goToSlide(newSlide);
+    }, 5000);
+});
+
+carouselDots.addEventListener('mouseleave', () => {
+    carouselInterval = setInterval(() => {
+        let newSlide = currentSlide + 1;
+        if (newSlide >= carouselSlides.length) newSlide = 0;
+        goToSlide(newSlide);
+    }, 5000);
+});
 
 // ===== FILTRO DE SCRIPTS =====
-function initScriptsFilter() {
-    const filterButtons = document.querySelectorAll('.filter-btn');
-    const scriptCards = document.querySelectorAll('.script-card');
-    
-    filterButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            // Actualizar botón activo
-            filterButtons.forEach(btn => btn.classList.remove('active'));
-            this.classList.add('active');
-            
-            // Obtener filtro
-            const filter = this.getAttribute('data-filter');
-            
-            // Filtrar scripts
-            scriptCards.forEach(card => {
-                if (filter === 'all' || card.getAttribute('data-category') === filter) {
-                    card.style.display = 'block';
-                    setTimeout(() => {
-                        card.style.opacity = '1';
-                        card.style.transform = 'translateY(0)';
-                    }, 10);
-                } else {
-                    card.style.opacity = '0';
-                    card.style.transform = 'translateY(20px)';
-                    setTimeout(() => {
-                        card.style.display = 'none';
-                    }, 300);
-                }
-            });
+const filterButtons = document.querySelectorAll('.filter-btn');
+const scriptCards = document.querySelectorAll('.script-card');
+
+filterButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        // Quitar clase active de todos los botones
+        filterButtons.forEach(btn => btn.classList.remove('active'));
+        // Añadir clase active al botón clickeado
+        button.classList.add('active');
+        
+        const filter = button.getAttribute('data-filter');
+        
+        scriptCards.forEach(card => {
+            if (filter === 'all' || card.getAttribute('data-category') === filter) {
+                card.style.display = 'block';
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 100);
+            } else {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.display = 'none';
+                }, 300);
+            }
         });
     });
-}
+});
 
 // ===== FORMULARIO DE CONTACTO =====
-function initContactForm() {
-    const contactForm = document.getElementById('contactForm');
-    const submitBtn = document.getElementById('submitBtn');
-    const btnText = document.getElementById('btnText');
-    const btnLoader = document.getElementById('btnLoader');
-    
-    contactForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        // Mostrar loader
-        btnText.textContent = 'Enviando...';
-        btnLoader.classList.remove('hidden');
-        submitBtn.disabled = true;
-        
-        // Obtener datos del formulario
-        const formData = {
-            name: document.getElementById('name').value,
-            email: document.getElementById('email').value,
-            company: document.getElementById('company').value,
-            message: document.getElementById('message').value
-        };
-        
-        // Enviar con EmailJS
-        emailjs.send('service_cybershield', 'template_contact', formData)
-            .then(function(response) {
-                // Éxito
-                btnText.textContent = '¡Mensaje Enviado!';
-                btnLoader.classList.add('hidden');
-                
-                // Resetear formulario después de un tiempo
-                setTimeout(() => {
-                    contactForm.reset();
-                    btnText.textContent = 'Enviar Mensaje';
-                    submitBtn.disabled = false;
-                }, 3000);
-                
-                // Mostrar notificación de éxito
-                showNotification('Mensaje enviado correctamente. Te contactaré pronto.', 'success');
-            }, function(error) {
-                // Error
-                btnText.textContent = 'Error al Enviar';
-                btnLoader.classList.add('hidden');
-                
-                // Restaurar después de un tiempo
-                setTimeout(() => {
-                    btnText.textContent = 'Enviar Mensaje';
-                    submitBtn.disabled = false;
-                }, 3000);
-                
-                // Mostrar notificación de error
-                showNotification('Error al enviar el mensaje. Inténtalo de nuevo.', 'error');
-            });
-    });
-}
+const contactForm = document.getElementById('contactForm');
+const submitBtn = document.getElementById('submitBtn');
+const btnText = document.getElementById('btnText');
+const btnLoader = document.getElementById('btnLoader');
 
-// ===== NOTIFICACIONES =====
-function showNotification(message, type) {
-    // Crear elemento de notificación
-    const notification = document.createElement('div');
-    notification.className = `notification ${type}`;
-    notification.innerHTML = `
-        <div class="notification-content">
-            <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
-            <span>${message}</span>
-        </div>
-    `;
+contactForm.addEventListener('submit', function(e) {
+    e.preventDefault();
     
-    // Estilos de notificación
-    notification.style.cssText = `
-        position: fixed;
-        top: 100px;
-        right: 30px;
-        background: ${type === 'success' ? 'rgba(100, 255, 218, 0.9)' : 'rgba(255, 100, 100, 0.9)'};
-        color: var(--primary-dark);
-        padding: 15px 25px;
-        border-radius: 8px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        z-index: 10000;
-        transform: translateX(100%);
-        transition: transform 0.3s ease;
-        font-weight: 600;
-        max-width: 400px;
-    `;
+    // Mostrar loader
+    btnText.textContent = 'Enviando...';
+    btnLoader.classList.remove('hidden');
+    submitBtn.disabled = true;
     
-    document.body.appendChild(notification);
+    // Obtener datos del formulario
+    const formData = {
+        name: document.getElementById('name').value,
+        email: document.getElementById('email').value,
+        company: document.getElementById('company').value,
+        message: document.getElementById('message').value
+    };
     
-    // Animación de entrada
-    setTimeout(() => {
-        notification.style.transform = 'translateX(0)';
-    }, 10);
+    // Enviar email usando EmailJS
+    emailjs.send('service_cybershield', 'template_contact', formData)
+        .then(function(response) {
+            console.log('SUCCESS!', response.status, response.text);
+            
+            // Mostrar mensaje de éxito
+            btnText.textContent = '¡Mensaje Enviado!';
+            btnLoader.classList.add('hidden');
+            
+            // Resetear formulario después de 2 segundos
+            setTimeout(() => {
+                contactForm.reset();
+                btnText.textContent = 'Enviar Mensaje';
+                submitBtn.disabled = false;
+            }, 2000);
+        }, function(error) {
+            console.log('FAILED...', error);
+            
+            // Mostrar mensaje de error
+            btnText.textContent = 'Error, intenta de nuevo';
+            btnLoader.classList.add('hidden');
+            
+            // Restaurar después de 2 segundos
+            setTimeout(() => {
+                btnText.textContent = 'Enviar Mensaje';
+                submitBtn.disabled = false;
+            }, 2000);
+        });
+});
+
+// ===== RELOJ EN FOOTER =====
+function updateClock() {
+    const now = new Date();
     
-    // Remover después de 5 segundos
-    setTimeout(() => {
-        notification.style.transform = 'translateX(100%)';
-        setTimeout(() => {
-            document.body.removeChild(notification);
-        }, 300);
-    }, 5000);
+    // Formatear hora
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    
+    document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
+    
+    // Formatear fecha
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    document.getElementById('date').textContent = now.toLocaleDateString('es-ES', options);
 }
 
 // ===== BOTÓN FLOTANTE =====
-function initFloatingButton() {
-    const floatingBtn = document.getElementById('floatingBtn');
-    
-    floatingBtn.addEventListener('click', function() {
-        // Scroll al inicio
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
+const floatingBtn = document.getElementById('floatingBtn');
+
+floatingBtn.addEventListener('click', () => {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
     });
-    
-    // Mostrar/ocultar botón según scroll
-    window.addEventListener('scroll', function() {
-        if (window.scrollY > 500) {
-            floatingBtn.style.display = 'flex';
-        } else {
-            floatingBtn.style.display = 'none';
-        }
-    });
-}
+});
+
+// Mostrar/ocultar botón flotante al hacer scroll
+window.addEventListener('scroll', () => {
+    if (window.scrollY > 500) {
+        floatingBtn.style.opacity = '1';
+        floatingBtn.style.visibility = 'visible';
+    } else {
+        floatingBtn.style.opacity = '0';
+        floatingBtn.style.visibility = 'hidden';
+    }
+});
 
 // ===== BANNER DE COOKIES =====
-function initCookiesBanner() {
-    const cookiesBanner = document.getElementById('cookiesBanner');
-    const cookieAccept = document.getElementById('cookieAccept');
-    const cookieSettings = document.getElementById('cookieSettings');
-    
-    // Verificar si ya se aceptaron las cookies
-    if (!localStorage.getItem('cookiesAccepted')) {
-        // Mostrar banner después de 2 segundos
-        setTimeout(() => {
-            cookiesBanner.classList.remove('hidden');
-        }, 2000);
-    }
-    
-    // Aceptar cookies
-    cookieAccept.addEventListener('click', function() {
-        localStorage.setItem('cookiesAccepted', 'true');
-        cookiesBanner.classList.add('hidden');
-    });
-    
-    // Configurar cookies
-    cookieSettings.addEventListener('click', function() {
-        // Aquí iría la lógica para configuraciones más detalladas
-        alert('Configuración de cookies: Esta página utiliza cookies esenciales para su funcionamiento.');
-    });
+const cookiesBanner = document.getElementById('cookiesBanner');
+const cookieAccept = document.getElementById('cookieAccept');
+const cookieSettings = document.getElementById('cookieSettings');
+
+// Mostrar banner si no se ha aceptado
+if (!localStorage.getItem('cookiesAccepted')) {
+    setTimeout(() => {
+        cookiesBanner.classList.remove('hidden');
+    }, 2000);
 }
 
-// ===== RELOJ EN FOOTER =====
-function initClock() {
-    const clockElement = document.getElementById('clock');
-    const dateElement = document.getElementById('date');
-    
-    function updateClock() {
-        const now = new Date();
-        
-        // Formatear hora
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        const seconds = String(now.getSeconds()).padStart(2, '0');
-        
-        // Formatear fecha
-        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        const dateString = now.toLocaleDateString('es-ES', options);
-        
-        // Actualizar elementos
-        clockElement.textContent = `${hours}:${minutes}:${seconds}`;
-        dateElement.textContent = dateString;
-    }
-    
-    // Actualizar cada segundo
-    updateClock();
-    setInterval(updateClock, 1000);
-}
+// Aceptar cookies
+cookieAccept.addEventListener('click', () => {
+    localStorage.setItem('cookiesAccepted', 'true');
+    cookiesBanner.classList.add('hidden');
+});
 
-// ===== ANIMACIONES AL SCROLL =====
-function initScrollAnimations() {
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
-    
-    const observer = new IntersectionObserver(function(entries) {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-            }
-        });
-    }, observerOptions);
-    
-    // Observar elementos para animar
-    const elementsToAnimate = document.querySelectorAll('.skill-card, .script-card, .about-text, .contact-info');
-    elementsToAnimate.forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(30px)';
-        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-        observer.observe(el);
-    });
-}
+// Configurar cookies
+cookieSettings.addEventListener('click', () => {
+    alert('Configuración de cookies: Esta página utiliza cookies esenciales para el funcionamiento del sitio.');
+});
 
-// ===== MENÚ MÓVIL =====
-function initMobileMenu() {
-    const mobileMenu = document.querySelector('.mobile-menu');
-    const navLinks = document.querySelector('.nav-links');
-    
-    mobileMenu.addEventListener('click', function() {
-        navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+// ===== NAVEGACIÓN SUAVE =====
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        const targetId = this.getAttribute('href');
+        if (targetId === '#') return;
+        
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+            const offsetTop = targetElement.offsetTop - 100;
+            
+            window.scrollTo({
+                top: offsetTop,
+                behavior: 'smooth'
+            });
+        }
     });
+});
+
+// ===== ANIMACIÓN DE ELEMENTOS AL HACER SCROLL =====
+function checkScroll() {
+    const elements = document.querySelectorAll('.skill-card, .script-card, .certification-card');
     
-    // Cerrar menú al hacer clic en un enlace
-    document.querySelectorAll('.nav-links a').forEach(link => {
-        link.addEventListener('click', function() {
-            if (window.innerWidth <= 768) {
-                navLinks.style.display = 'none';
-            }
-        });
-    });
-    
-    // Ajustar menú al cambiar tamaño de ventana
-    window.addEventListener('resize', function() {
-        if (window.innerWidth > 768) {
-            navLinks.style.display = 'flex';
-        } else {
-            navLinks.style.display = 'none';
+    elements.forEach(element => {
+        const elementTop = element.getBoundingClientRect().top;
+        const elementVisible = 150;
+        
+        if (elementTop < window.innerHeight - elementVisible) {
+            element.style.opacity = '1';
+            element.style.transform = 'translateY(0)';
         }
     });
 }
 
-// ===== ACTUALIZAR AÑO EN FOOTER =====
-document.getElementById('year').textContent = new Date().getFullYear();
+// Aplicar estilos iniciales para animación
+document.querySelectorAll('.skill-card, .script-card, .certification-card').forEach(element => {
+    element.style.opacity = '0';
+    element.style.transform = 'translateY(20px)';
+    element.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+});
+
+// ===== INICIALIZACIÓN =====
+document.addEventListener('DOMContentLoaded', function() {
+    // Inicializar partículas
+    initParticles();
+    animateParticles();
+    
+    // Inicializar carrusel
+    initCarouselDots();
+    
+    // Inicializar reloj
+    updateClock();
+    setInterval(updateClock, 1000);
+    
+    // Inicializar año en copyright
+    document.getElementById('year').textContent = new Date().getFullYear();
+    
+    // Comprobar scroll para animaciones
+    window.addEventListener('scroll', checkScroll);
+    checkScroll(); // Comprobar al cargar
+    
+    // Redimensionar canvas al cambiar tamaño de ventana
+    window.addEventListener('resize', resizeCanvas);
+    
+    // Efecto de escritura para el subtítulo del héroe
+    const subtitle = document.querySelector('.hero .subtitle');
+    const originalText = subtitle.textContent;
+    subtitle.textContent = '';
+    
+    let i = 0;
+    function typeWriter() {
+        if (i < originalText.length) {
+            subtitle.textContent += originalText.charAt(i);
+            i++;
+            setTimeout(typeWriter, 100);
+        }
+    }
+    
+    // Iniciar efecto de escritura después de un breve retraso
+    setTimeout(typeWriter, 1000);
+});
+
+// Efecto de partículas en el card del héroe
+const heroCard = document.getElementById('heroCard');
+if (heroCard) {
+    heroCard.addEventListener('mousemove', (e) => {
+        const rect = heroCard.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        
+        const angleX = (y - centerY) / 20;
+        const angleY = (centerX - x) / 20;
+        
+        heroCard.style.transform = `perspective(1000px) rotateX(${angleX}deg) rotateY(${angleY}deg) scale3d(1.02, 1.02, 1.02)`;
+    });
+    
+    heroCard.addEventListener('mouseleave', () => {
+        heroCard.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
+    });
+}
+// ===== CARRUSEL DE SCRIPTS =====
+const scriptsCarousel = document.getElementById('scriptsCarousel');
+const scriptsPrev = document.getElementById('scriptsPrev');
+const scriptsNext = document.getElementById('scriptsNext');
+const scriptsDots = document.getElementById('scriptsDots');
+let currentScriptSlide = 0;
+const scriptCardsElements = document.querySelectorAll('#scriptsCarousel .script-card');
+let scriptsPerView = 3;
+
+// Inicializar puntos del carrusel de scripts
+function initScriptsDots() {
+    scriptsDots.innerHTML = '';
+    const totalSlides = Math.ceil(scriptCardsElements.length / scriptsPerView);
+    
+    for (let i = 0; i < totalSlides; i++) {
+        const dot = document.createElement('span');
+        dot.classList.add('scripts-dot');
+        if (i === 0) dot.classList.add('active');
+        dot.setAttribute('data-slide', i);
+        dot.addEventListener('click', () => goToScriptSlide(i));
+        scriptsDots.appendChild(dot);
+    }
+}
+
+// Ir a slide específico de scripts
+function goToScriptSlide(slideIndex) {
+    const totalSlides = Math.ceil(scriptCardsElements.length / scriptsPerView);
+    if (slideIndex < 0) slideIndex = totalSlides - 1;
+    if (slideIndex >= totalSlides) slideIndex = 0;
+    
+    currentScriptSlide = slideIndex;
+    const cardWidth = scriptCardsElements[0].offsetWidth + 30; // Ancho + gap
+    const scrollPosition = currentScriptSlide * cardWidth * scriptsPerView;
+    
+    scriptsCarousel.scrollTo({
+        left: scrollPosition,
+        behavior: 'smooth'
+    });
+    
+    // Actualizar puntos
+    document.querySelectorAll('.scripts-dot').forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentScriptSlide);
+    });
+}
+
+// Event listeners para controles del carrusel de scripts
+scriptsPrev.addEventListener('click', () => {
+    goToScriptSlide(currentScriptSlide - 1);
+});
+
+scriptsNext.addEventListener('click', () => {
+    goToScriptSlide(currentScriptSlide + 1);
+});
+
+// Ajustar scripts por vista según el tamaño de pantalla
+function adjustScriptsPerView() {
+    if (window.innerWidth < 768) {
+        scriptsPerView = 1;
+    } else if (window.innerWidth < 1200) {
+        scriptsPerView = 2;
+    } else {
+        scriptsPerView = 3;
+    }
+    initScriptsDots();
+    goToScriptSlide(0);
+}
+
+// Inicializar carrusel de scripts al cargar
+document.addEventListener('DOMContentLoaded', function() {
+    adjustScriptsPerView();
+    window.addEventListener('resize', adjustScriptsPerView);
+});

@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>CyberShield | Técnico de Ciberseguridad</title>
+    <title>DVM | Daniel Vargas</title>
+    <link rel="icon" type="image/x-icon" href="logo.jpg">
 
     <link rel="stylesheet" href="css/styles.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
@@ -32,6 +33,7 @@
                 <ul class="nav-links">
                     <li><a href="#about">Sobre Mí</a></li>
                     <li><a href="#skills">Habilidades</a></li>
+                    <li><a href="#certifications">Certificaciones</a></li>
                     <li><a href="#scripts">Scripts</a></li>
                     <li><a href="#contact">Contacto</a></li>
                     <li>
@@ -49,13 +51,14 @@
     <section class="hero" id="home">
         <div class="container">
             <div class="hero-container" id="heroCard">
-                <h1>Daniel Vargas</h1>
+                <h1 class="hover-accent">Daniel Vargas</h1>
                 <div class="subtitle">Técnico de Ciberseguridad</div>
                 <p> Soy un apasionado de la ciberseguridad y el desarrollo de scripts. Actualmente me encuentro en la búsqueda de nuevas oportunidades para aplicar mis habilidades y conocimientos en proyectos desafiantes.</p>
 
                 <div class="hero-buttons">
                     <a href="#about" class="hero-btn">Sobre Mí</a>
                     <a href="#skills" class="hero-btn">Habilidades</a>
+                    <a href="#certifications" class="hero-btn">Certificaciones</a>
                     <a href="#scripts" class="hero-btn">Scripts</a>
                     <a href="#contact" class="hero-btn btn-primary">Contacto</a>
                 </div>
@@ -79,7 +82,7 @@
     <section class="section" id="about">
         <div class="container">
             <div class="section-title">
-                <h2>Sobre Mí</h2>
+                <h2 class="hover-accent">Sobre Mí</h2>
             </div>
             <div class="about-content">
                 <div class="about-text">
@@ -155,94 +158,216 @@
     <section class="section skills" id="skills">
         <div class="container">
             <div class="section-title">
-                <h2>Habilidades Técnicas</h2>
+                <h2 class="hover-accent">Habilidades Técnicas</h2>
             </div>
             <div class="skills-grid">
                 <div class="skill-card">
                     <div class="skill-icon">🔍</div>
-                    <h3>Análisis de Vulnerabilidades</h3>
+                    <h3 class="hover-accent">Análisis de Vulnerabilidades</h3>
                     <p>Experiencia con Nessus, OpenVAS, y análisis manual para priorizar mitigaciones.</p>
                 </div>
                 <div class="skill-card">
                     <div class="skill-icon">🛡️</div>
-                    <h3>Automatización de Seguridad</h3>
+                    <h3 class="hover-accent">Automatización de Seguridad</h3>
                     <p>Scripts y playbooks para automatizar tareas de parcheo, escaneos y respuesta.</p>
                 </div>
                 <div class="skill-card">
                     <div class="skill-icon">📊</div>
-                    <h3>Análisis Forense</h3>
+                    <h3 class="hover-accent">Análisis Forense</h3>
                     <p>Uso de Autopsy y Volatility para preservación y análisis de evidencia digital.</p>
                 </div>
                 <div class="skill-card">
                     <div class="skill-icon">🌐</div>
-                    <h3>Seguridad Web</h3>
+                    <h3 class="hover-accent">Seguridad Web</h3>
                     <p>Burp Suite, OWASP ZAP y pruebas manuales de aplicaciones.</p>
                 </div>
                 <div class="skill-card">
                     <div class="skill-icon">🔒</div>
-                    <h3>Criptografía</h3>
+                    <h3 class="hover-accent">Criptografía</h3>
                     <p>OpenSSL, GnuPG y buenas prácticas para proteger datos en reposo y tránsito.</p>
                 </div>
                 <div class="skill-card">
                     <div class="skill-icon">⚡</div>
-                    <h3>Respuesta a Incidentes</h3>
+                    <h3 class="hover-accent">Respuesta a Incidentes</h3>
                     <p>Playbooks, ELK y herramientas de SOAR para contención y remediación.</p>
                 </div>
             </div>
         </div>
     </section>
-
-    <!-- SCRIPTS -->
-    <section class="section" id="scripts">
-        <div class="container">
-            <div class="section-title">
-                <h2>Mis Scripts</h2>
-            </div>
-            <div class="scripts-filter">
-                <button class="filter-btn active" data-filter="all">Todos</button>
-                <button class="filter-btn" data-filter="vulnerability">Análisis de Vulnerabilidades</button>
-                <button class="filter-btn" data-filter="automation">Automatización</button>
-                <button class="filter-btn" data-filter="forensic">Forense</button>
-                <button class="filter-btn" data-filter="web">Seguridad Web</button>
-            </div>
-            <div class="scripts-grid">
-                <div class="script-card" data-category="vulnerability">
-                    <div class="script-image">🔍</div>
-                    <div class="script-content">
-                        <div class="script-tags"><span class="script-tag">Python</span><span class="script-tag">Vulnerability</span></div>
-                        <h3>Network Scanner Pro</h3>
-                        <p>Escaneo avanzado de redes y detección de CVEs conocidas.</p>
-                        <div class="script-links"><a href="#" class="script-link">Ver Detalles</a><a href="#" class="script-link">Descargar</a></div>
+    <!-- CERTIFICATIONS -->
+<section class="section certifications" id="certifications">
+    <div class="container">
+        <div class="section-title">
+            <h2>Certificaciones y Formación</h2>
+        </div>
+        <div class="certifications-grid">
+            <div class="certification-card">
+                <div class="certification-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="certification-content">
+                    <h3><strong>IFCT0109 Seguridad Infomática</strong></h3>
+                    <p><strong>Certificado en seguridad informatica, redes y proteccion de datos más practicas 6 meses en empresa</strong></p>
+                    <div class="certification-footer">
+                        <span class="certification-date">2025</span>
+                        <span class="certification-status">Certificado</span>
                     </div>
                 </div>
-
-                <div class="script-card" data-category="automation">
-                    <div class="script-image">⚙️</div>
-                    <div class="script-content">
-                        <div class="script-tags"><span class="script-tag">Bash</span><span class="script-tag">Automation</span></div>
-                        <h3>Security Automation Toolkit</h3>
-                        <p>Automatiza backups, checks y reportes de seguridad.</p>
-                        <div class="script-links"><a href="#" class="script-link">Ver Detalles</a><a href="#" class="script-link">Descargar</a></div>
+            </div>
+            <div class="certification-card">
+                <div class="certification-icon">
+                    <i class="fas fa-code"></i>
+                </div>
+                <div class="certification-content">
+                    <h3><strong> 2 Años como Desarrollador Web en Patrimonio Nacional</strong></h3>
+                    <p><strong>En el que trabaje creando paginas web y aplicaciones usando diferentes lenguajes (HTML,CSS,JS,PHP,REACT etc)</strong></p>
+                    <div class="certification-footer">
+                        <span class="certification-date">2023-2024</span>
+                        <span class="certification-status">Trabajo</span>
                     </div>
                 </div>
-
-                <div class="script-card" data-category="forensic">
-                    <div class="script-image">📊</div>
-                    <div class="script-content">
-                        <div class="script-tags"><span class="script-tag">Python</span><span class="script-tag">Forensic</span></div>
-                        <h3>Log Analyzer</h3>
-                        <p>Procesa logs para identificar actividad sospechosa y generar reportes.</p>
-                        <div class="script-links"><a href="#" class="script-link">Ver Detalles</a><a href="#" class="script-link">Descargar</a></div>
+            </div>
+            <div class="certification-card">
+                <div class="certification-icon">
+                    <i class="fas fa-globe"></i>
+                </div>
+                <div class="certification-content">
+                    <h3><strong> IFCD0210 Desarrollo Avanzado en Aplicaciones  Web</strong></h3>
+                    <p><strong>Titulación que acredita habilidades en desarrollo web avanzado y frameworks modernos.</strong></p>
+                    <div class="certification-footer">
+                        <span class="certification-date">2024</span>
+                        <span class="certification-status">Certificado</span>
+                    </div>
+                </div>
+            </div>
+            <div class="certification-card">
+                <div class="certification-icon">
+                    <i class="fas fa-tools"></i>
+                </div>
+                <div class="certification-content">
+                    <h3> <strong>>IFCT0108 Montaje y mantenimiento de sistemas microinformáticos.</strong></h3>
+                    <p><strong>Formación en montaje, mantenimiento y reparación de sistemas microinformáticos.</strong></p>
+                    <div class="certification-footer">
+                        <span class="certification-date">2021-2022</span>
+                        <span class="certification-status">Certificado</span>
+                    </div>
+                </div>
+            </div>
+            <div class="certification-card">
+                <div class="certification-icon">
+                    <i class="fas fa-user-shield"></i>
+                </div>
+                <div class="certification-content">
+                    <h3> <strong>Otros titulos de ciberseguridad</strong></h3>
+                    <p><strong>Cisco ciberseguridad <br>
+                        AWS Cloud Practitioner<br>
+                        Microsoft Security <br>
+                        Splunk <br>
+                        Redes</strong><p>
+                    <div class="certification-footer">
+                        <span class="certification-date">2025</span>
+                        <span class="certification-status">Certificado</span>
+                    </div>
+                </div>
+            </div>
+            <div class="certification-card">
+                <div class="certification-icon">
+                    <i class="fas fa-laptop-code"></i>
+                </div>
+                <div class="certification-content">
+                    <h3> <strong>Diversos Proyectos de Seguridad</strong></h3>
+                    <p> <strong>Actualmente me encuentro trabajando en varios proyectos de seguridad informática, incluyendo auditorías de seguridad y desarrollo de herramientas de protección.</strong></p>
+                    <div class="certification-footer">
+                        <span class="certification-date">Actualidad</span>
+                        <span class="certification-status">Activo</span>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
+
+    <!-- SCRIPTS -->
+<!-- SECCIÓN SCRIPTS - MODIFICADA -->
+<section class="section" id="scripts">
+    <div class="container">
+        <div class="section-title">
+            <h2>Mis Scripts y Proyectos</h2>
+        </div>     
+        <!-- Carrusel de Scripts -->
+        <div class="scripts-carousel-container">
+            <button class="carousel-btn scripts-prev" id="scriptsPrev" aria-label="Anterior">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+
+            <div class="scripts-carousel" id="scriptsCarousel">
+                <div class="script-card" data-category="automation">
+                    <div class="script-image">
+                        <img src="img/Analysites.png" alt="Vista previa de AnalysiteS" />
+                    </div>
+                    <div class="script-content">
+                        <div class="script-tags">
+                            <span class="script-tag">Python</span>
+                            <span class="script-tag">Web Security</span>
+                            <span class="script-tag">Script</span>
+                        </div>
+                        <h3><strong>AnalysiteS</strong></h3>
+                        <p><strong>AnalysiteS es una plataforma integral de análisis de seguridad basada en web que proporciona cuatro herramientas de seguridad integradas</strong></p>
+                        <div class="script-links">
+                            <a href="https://github.com/danieltandem/-AnalysiteS" class="script-link">GitHub</a>
+                            <a href="descargas/AnalysiteS.zip" class="script-link">Descargar</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="script-card" data-category="vulnerability">
+                    <div class="script-image">
+                        <img src="img/Informe.png" alt="Vista previa de Auditoría El Ferial" />
+                    </div>
+                    <div class="script-content">
+                        <div class="script-tags">
+                            <span class="script-tag">Auditoria</span>
+                            <span class="script-tag">Ciberseguridad</span>
+                        </div>
+                        <h3><strong>Auditoria "El Ferial"</strong></h3>
+                        <p><strong>Auditoria mostrando mi trabajo final del titulo de ciberseguridad en el que se analizan diversas vulnerabilidades y se proponen soluciones.</strong></p>
+                        <div class="script-links">
+                            <a href="https://github.com/danieltandem/Auditoria_ElFerial" class="script-link">GitHub</a>
+                            <a href="descargas/AuditoriaDVM.pdf" class="script-link">Descargar</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="script-card" data-category="forensic">
+                    <div class="script-image">
+                        <img src="img/MineLand.png" alt="Vista previa de MineLand" />
+                    </div>
+                    <div class="script-content">
+                        <div class="script-tags">
+                            <span class="script-tag">Pagina Web</span>
+                            <span class="script-tag">Programación</span>
+                        </div>
+                        <h3><strong>MineLand</strong></h3>
+                        <p><strong>MineLand es un prototipo de pagina web de videojuegos infantiles que hice para practicar mis habilidades de desarrollo web.</strong></p>
+                        <div class="script-links">
+                            <a href="#" class="script-link">GitHub</a>
+                            <a href="#" class="script-link">Enlace</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="carousel-btn scripts-next" id="scriptsNext" aria-label="Siguiente">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+
+            <div class="scripts-dots" id="scriptsDots"></div>
+        </div>
+    </div>
+</section>
 
     <!-- CONTACT -->
     <section class="contact" id="contact">
         <div class="container">
-            <div class="section-title"><h2>Contacto</h2></div>
+            <div class="section-title"><h2 class="hover-accent">Contacto</h2></div>
             <div class="contact-content">
                 <div class="contact-info">
                     <h3 class="hover-accent">Datos de Contacto</h3>
@@ -310,52 +435,59 @@
         </div>
     </section>
 
-    <!-- FOOTER -->
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-column">
-                    <div class="footer-logo">
-                        <i class="fas fa-shield-alt logo-icon"></i>
-                        <span class="logo-text">D V M</span>
-                    </div>
-                    <p>Técnico especializado en ciberseguridad y desarrollo de scripts para proteger sistemas empresariales.</p>
-                    <div class="footer-clock">
-                        <div id="clock">--:--:--</div>
-                        <div id="date">--</div>
-                    </div>
+<!-- FOOTER -->
+<footer>
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-column">
+                <div class="footer-logo">
+                    <i class="fas fa-shield-alt logo-icon"></i>
+                    <span class="logo-text">D V M</span>
                 </div>
-
-                <div class="footer-links">
-                    <div class="footer-column">
-                        <h4>Enlaces Rápidos</h4>
-                        <ul>
-                            <li><a href="#home">Inicio</a></li>
-                            <li><a href="#about">Sobre Mí</a></li>
-                            <li><a href="#skills">Habilidades</a></li>
-                            <li><a href="#scripts">Scripts</a></li>
-                            <li><a href="#contact">Contacto</a></li>
-                        </ul>
-                    </div>
-
-                    <div class="footer-column">
-                        <h4>Recursos</h4>
-                        <ul>
-                            <li><a href="#scripts">Mis Scripts</a></li>
-                            <li><a href="#skills">Habilidades</a></li>
-                            <li><a href="#about">Experiencia</a></li>
-                            <li><a href="#contact">Colaboración</a></li>
-                        </ul>
-                    </div>
+                <p>Técnico especializado en ciberseguridad y desarrollo de scripts para proteger sistemas empresariales.</p>
+                <div class="footer-clock">
+                    <div id="clock">--:--:--</div>
+                    <div id="date">--</div>
                 </div>
             </div>
 
-            <div class="copyright">
-                <p>&copy; <span id="year">2025</span> Daniel Vargas - Técnico de Ciberseguridad. Todos los derechos reservados.</p>
+            <div class="footer-links">
+                <div class="footer-column">
+                    <h4 class="hover-accent">Enlaces Rápidos</h4>
+                    <ul>
+                        <li><a href="#home">Inicio</a></li>
+                        <li><a href="#about">Sobre Mí</a></li>
+                        <li><a href="#skills">Habilidades</a></li>
+                        <li><a href="#certifications">Certificaciones</a></li>
+                        <li><a href="#scripts">Scripts</a></li>
+                        <li><a href="#contact">Contacto</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h4 class="hover-accent">Recursos</h4>
+                    <ul>
+                        <li><a href="mailto:danielvargasdemiguel@gmail.com">Correo Electrónico</a></li>
+                        <li><a href="https://www.linkedin.com/in/danielvargasdemiguel" target="_blank">LinkedIn</a></li>
+                        <li><a href="https://github.com/danieltandem" target="_blank">GitHub</a></li>
+                        <li><a href="#scripts">Portafolio de Scripts</a></li>
+                    </ul>
+                </div>
+
+                <!-- Logo simple a la derecha -->
+                <div class="footer-column">
+                    <div class="simple-logo">
+                        <img src="logo.jpg" alt="CyberShield Logo" class="logo-simple-image" />
+                    </div>
+                </div>
             </div>
         </div>
-    </footer>
 
+        <div class="copyright">
+            <p>&copy; <span id="year">2025</span> Daniel Vargas - Técnico de Ciberseguridad. Todos los derechos reservados.</p>
+        </div>
+    </div>
+</footer>
     <!-- Floating -->
     <button class="floating-btn" id="floatingBtn">
         <i class="fas fa-shield-alt"></i>

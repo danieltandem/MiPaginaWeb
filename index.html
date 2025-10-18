@@ -36,6 +36,7 @@
                 <li><a href="#skills">Habilidades</a></li>
                 <li><a href="#certifications">Certificaciones</a></li>
                 <li><a href="#scripts">Scripts</a></li>
+                <li><a href="#news">Actualidad</a></li>
                 <li><a href="#contact">Contacto</a></li>
                 <li>
                     <button class="theme-toggle" id="themeToggle">
@@ -53,16 +54,16 @@
         <div class="container">
             <div class="hero-container" id="heroCard">
                 <h1 class="hover-accent">Daniel Vargas</h1>
-                <div class="subtitle">Técnico de Ciberseguridad</div>
-                <p> Soy un apasionado de la ciberseguridad y el desarrollo de scripts. Actualmente me encuentro en la búsqueda de nuevas oportunidades para aplicar mis habilidades y conocimientos en proyectos desafiantes.</p>
-
-                <div class="hero-buttons">
-                    <a href="#about" class="hero-btn">Sobre Mí</a>
-                    <a href="#skills" class="hero-btn">Habilidades</a>
-                    <a href="#certifications" class="hero-btn">Certificaciones</a>
-                    <a href="#scripts" class="hero-btn">Scripts</a>
-                    <a href="#contact" class="hero-btn btn-primary">Contacto</a>
-                </div>
+                <div class="subtitle">Técnico en Ciberseguridad Y Desarrollo Web</div>
+                <p> Soy un apasionado de la ciberseguridad y el desarrollo Web y de scripts. Actualmente me encuentro en la búsqueda de nuevas oportunidades para aplicar mis habilidades y conocimientos en proyectos desafiantes en un entorno empresarial.</p>
+<div class="hero-buttons">
+    <a href="#about" class="hero-btn">Sobre Mí</a>
+    <a href="#skills" class="hero-btn">Habilidades</a>
+    <a href="#certifications" class="hero-btn">Certificaciones</a>
+    <a href="#scripts" class="hero-btn">Scripts</a>
+    <a href="#news" class="hero-btn">Actualidad</a>
+    <a href="#contact" class="hero-btn btn-primary">Contacto</a>
+</div>
 
                 <div class="social-icons">
                     <a href="https://github.com/danieltandem" class="social-icon" target="_blank">
@@ -301,7 +302,26 @@
                 <i class="fas fa-chevron-left"></i>
             </button>
 
-            <div class="scripts-carousel" id="scriptsCarousel">
+            <div class="scripts-carousel" id="scriptsCarousel"> 
+                <div class="script-card" data-category="automation">
+                    <div class="script-image">
+                        <img src="img/LogsICO_Logo.png" alt="Vista previa de LogsICO" />
+                    </div>
+                    <div class="script-content">
+                        <div class="script-tags">
+                            <span class="script-tag">Logs</span>
+                            <span class="script-tag">Linux</span>
+                            <span class="script-tag">Windows</span>
+                            <span class="script-tag">Mac</span>
+                        </div>
+                        <h3><strong>LogsICO</strong></h3>
+                        <p><strong>LogsICO es una aplicacion que sirve para ver los logs de forma clara y sencilla ademas de poder tener una copia </strong></p>
+                        <div class="script-links">
+                            <a href="https://github.com/danieltandem/LogsICO" class="script-link">GitHub</a>
+                            <a href="descargas/LogsICO.zip" class="script-link">Descargar</a>
+                        </div>
+                    </div>
+                </div>
                 <div class="script-card" data-category="automation">
                     <div class="script-image">
                         <img src="img/Analysites.png" alt="Vista previa de AnalysiteS" />
@@ -361,6 +381,144 @@
             </button>
 
             <div class="scripts-dots" id="scriptsDots"></div>
+        </div>
+    </div>
+</section>
+<!-- NUEVA SECCIÓN: ACTUALIDAD PROFESIONAL CON CARRUSEL -->
+<section class="section news" id="news">
+    <div class="container">
+        <div class="section-title">
+            <h2 class="hover-accent">Actualidad Profesional</h2>
+        </div>
+        
+        <!-- Carrusel de Noticias -->
+        <div class="news-carousel-container">
+            <button class="carousel-btn news-prev" id="newsPrev" aria-label="Noticia anterior">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+
+            <div class="news-carousel" id="newsCarousel">
+                <!-- LogsICO -->
+                <article class="news-card">
+                    <div class="news-date">
+                        <span class="news-day">17</span>
+                        <span class="news-month">OCT</span>
+                        <span class="news-year">2025</span>
+                    </div>
+                    <div class="news-content">
+                        <div class="news-tags">
+                            <span class="news-tag">Logs</span>
+                            <span class="news-tag">Multiplataforma</span>
+                            <span class="news-tag">Seguridad</span>
+                        </div>
+                        <h3>LogsICO - Analizador de Logs</h3>
+                        <p>Aplicación desarrollada para visualizar y analizar logs de sistemas de forma clara y sencilla. Compatible con Linux, Windows y Mac, permite tener copias de seguridad de logs y análisis en tiempo real.</p>
+                        <div class="news-footer">
+                            <a href="https://github.com/danieltandem/LogsICO" class="news-link" target="_blank">
+                                <i class="fab fa-github"></i> Ver en GitHub
+                            </a>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- AnalysiteS -->
+                <article class="news-card">
+                    <div class="news-date">
+                        <span class="news-day">13</span>
+                        <span class="news-month">OCT</span>
+                        <span class="news-year">2025</span>
+                    </div>
+                    <div class="news-content">
+                        <div class="news-tags">
+                            <span class="news-tag">Web Security</span>
+                            <span class="news-tag">Python</span>
+                            <span class="news-tag">Análisis</span>
+                        </div>
+                        <h3>AnalysiteS - Plataforma de Análisis</h3>
+                        <p>Plataforma integral de análisis de seguridad web que proporciona cuatro herramientas integradas: escáner de puertos, analizador de headers, verificador de DNS y auditor de seguridad.</p>
+                        <div class="news-footer">
+                            <a href="https://github.com/danieltandem/-AnalysiteS" class="news-link" target="_blank">
+                                <i class="fab fa-github"></i> Ver en GitHub
+                            </a>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Auditoría El Ferial -->
+                <article class="news-card">
+                    <div class="news-date">
+                        <span class="news-day">11</span>
+                        <span class="news-month">OCT</span>
+                        <span class="news-year">2025</span>
+                    </div>
+                    <div class="news-content">
+                        <div class="news-tags">
+                            <span class="news-tag">Auditoría</span>
+                            <span class="news-tag">Ciberseguridad</span>
+                            <span class="news-tag">Informe</span>
+                        </div>
+                        <h3>Auditoría de Seguridad "El Ferial"</h3>
+                        <p>Trabajo final del título de ciberseguridad donde se analizan diversas vulnerabilidades y se proponen soluciones específicas. Incluye análisis de red, evaluación de vulnerabilidades y plan de mitigación.</p>
+                        <div class="news-footer">
+                            <a href="https://github.com/danieltandem/Auditoria_ElFerial" class="news-link" target="_blank">
+                                <i class="fab fa-github"></i> Ver en GitHub
+                            </a>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- MineLand -->
+                <article class="news-card">
+                    <div class="news-date">
+                        <span class="news-day">08</span>
+                        <span class="news-month">OCT</span>
+                        <span class="news-year">2025</span>
+                    </div>
+                    <div class="news-content">
+                        <div class="news-tags">
+                            <span class="news-tag">Desarrollo Web</span>
+                            <span class="news-tag">JavaScript</span>
+                            <span class="news-tag">Prototipo</span>
+                        </div>
+                        <h3>MineLand - Plataforma Web Infantil</h3>
+                        <p>Prototipo de página web de videojuegos infantiles desarrollado para practicar habilidades de desarrollo web. Incluye diseño responsive y elementos interactivos para una mejor experiencia de usuario.</p>
+                        <div class="news-footer">
+                            <a href="https://github.com/danieltandem/Mineland" class="news-link" target="_blank">
+                                <i class="fab fa-github"></i> Ver en GitHub
+                            </a>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Portfolio Personal -->
+                <article class="news-card">
+                    <div class="news-date">
+                        <span class="news-day">05</span>
+                        <span class="news-month">OCT</span>
+                        <span class="news-year">2025</span>
+                    </div>
+                    <div class="news-content">
+                        <div class="news-tags">
+                            <span class="news-tag">Portfolio</span>
+                            <span class="news-tag">HTML/CSS</span>
+                            <span class="news-tag">JavaScript</span>
+                        </div>
+                        <h3>Portfolio Personal DVM</h3>
+                        <p>Desarrollo de mi portfolio personal con diseño moderno y responsive. Incluye modo claro/oscuro, efectos de partículas, y presentación de habilidades técnicas en ciberseguridad y desarrollo web.</p>
+                        <div class="news-footer">
+                            <a href="https://github.com/danieltandem" class="news-link" target="_blank">
+                                <i class="fab fa-github"></i> Ver en GitHub
+                            </a>
+                        </div>
+                    </div>
+                </article>
+            </div>
+            
+            <button class="carousel-btn news-next" id="newsNext" aria-label="Siguiente noticia">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+
+            <div class="news-dots" id="newsDots"></div>
         </div>
     </div>
 </section>
@@ -453,17 +611,18 @@
             </div>
 
             <div class="footer-links">
-                <div class="footer-column">
-                    <h4 class="hover-accent">Enlaces Rápidos</h4>
-                    <ul>
-                        <li><a href="#home">Inicio</a></li>
-                        <li><a href="#about">Sobre Mí</a></li>
-                        <li><a href="#skills">Habilidades</a></li>
-                        <li><a href="#certifications">Certificaciones</a></li>
-                        <li><a href="#scripts">Scripts</a></li>
-                        <li><a href="#contact">Contacto</a></li>
-                    </ul>
-                </div>
+            <div class="footer-column">
+    <h4 class="hover-accent">Enlaces Rápidos</h4>
+    <ul>
+        <li><a href="#home">Inicio</a></li>
+        <li><a href="#about">Sobre Mí</a></li>
+        <li><a href="#skills">Habilidades</a></li>
+        <li><a href="#certifications">Certificaciones</a></li>
+        <li><a href="#scripts">Scripts</a></li>
+        <li><a href="#news">Actualidad</a></li>
+        <li><a href="#contact">Contacto</a></li>
+    </ul>
+</div>
 
                 <div class="footer-column">
                     <h4 class="hover-accent">Recursos</h4>

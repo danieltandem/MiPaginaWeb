@@ -1,4 +1,4 @@
-// ===== PARTICLES BACKGROUND =====
+// ===== PARTICLES BACKGROUND MEJORADO =====
 const canvas = document.getElementById('particleCanvas');
 const ctx = canvas.getContext('2d');
 
@@ -6,15 +6,15 @@ const ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-// Configuración de partículas
+// Configuración de partículas MEJORADA
 const particles = [];
-const particleCount = 80;
+const particleCount = 120; // Aumentado de 80 a 120 para más densidad
 
-// Colores para modo oscuro y claro
+// Colores para modo oscuro y claro MEJORADOS
 const darkModeColors = ['#64ffda', '#8affdf', '#a8fff0', '#ccd6f6'];
-const lightModeColors = ['#0f766e', '#0d9488', '#14b8a6', '#475569'];
+const lightModeColors = ['#0f766e', '#0d9488', '#14b8a6', '#1e40af', '#dc2626']; // Más colores y más vibrantes
 
-// Clase para partículas
+// Clase Partícula MEJORADA
 class Particle {
     constructor() {
         this.reset();
@@ -25,34 +25,62 @@ class Particle {
     reset() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 3 + 1;
-        this.speedX = Math.random() * 2 - 1;
-        this.speedY = Math.random() * 2 - 1;
+        this.size = Math.random() * 4 + 1.5;
+        this.speedX = Math.random() * 3 - 1.5;
+        this.speedY = Math.random() * 3 - 1.5;
         this.color = document.body.classList.contains('light-mode') 
             ? lightModeColors[Math.floor(Math.random() * lightModeColors.length)]
             : darkModeColors[Math.floor(Math.random() * darkModeColors.length)];
-        this.opacity = Math.random() * 0.6 + 0.2;
+        // MEJORA: Partículas más visibles en modo claro
+        this.opacity = document.body.classList.contains('light-mode') 
+            ? Math.random() * 0.8 + 0.6  // Más opacas en modo claro
+            : Math.random() * 0.6 + 0.2;
+        this.pulseSpeed = Math.random() * 0.02 + 0.01;
+        this.pulseDirection = 1;
     }
     
     update() {
         this.x += this.speedX;
         this.y += this.speedY;
         
-        // Rebotar en los bordes
         if (this.x > canvas.width || this.x < 0) this.speedX *= -1;
         if (this.y > canvas.height || this.y < 0) this.speedY *= -1;
         
-        // Cambiar opacidad para efecto de parpadeo
-        this.opacity += (Math.random() - 0.5) * 0.05;
-        this.opacity = Math.max(0.2, Math.min(0.8, this.opacity));
+        this.opacity += this.pulseSpeed * this.pulseDirection;
+        // MEJORA: Rango de opacidad mayor en modo claro
+        if (document.body.classList.contains('light-mode')) {
+            if (this.opacity > 0.9 || this.opacity < 0.5) {
+                this.pulseDirection *= -1;
+            }
+        } else {
+            if (this.opacity > 0.8 || this.opacity < 0.3) {
+                this.pulseDirection *= -1;
+            }
+        }
+        
+        if (document.body.classList.contains('light-mode') && Math.random() < 0.002) {
+            this.color = lightModeColors[Math.floor(Math.random() * lightModeColors.length)];
+        }
     }
     
     draw() {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        
+        // MEJORA: Sombras más pronunciadas en modo claro
+        if (document.body.classList.contains('light-mode')) {
+            ctx.shadowColor = this.color;
+            ctx.shadowBlur = 20; // Más blur
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 0;
+        }
+        
         ctx.fillStyle = this.color;
         ctx.globalAlpha = this.opacity;
         ctx.fill();
+        
+        ctx.shadowColor = 'transparent';
+        ctx.shadowBlur = 0;
     }
 }
 
@@ -64,48 +92,91 @@ function initParticles() {
     }
 }
 
-// Animación de partículas
+// Animación de partículas MEJORADA - MODO CLARO MÁS VISIBLE
 function animateParticles() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // MEJORA: Fondo más transparente en modo claro para ver partículas
+    if (document.body.classList.contains('light-mode')) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height); // ELIMINAR FONDO GRIS
+        // Solo un gradiente muy sutil
+        const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+        gradient.addColorStop(0, 'rgba(248, 250, 252, 0.3)'); // Más transparente
+        gradient.addColorStop(1, 'rgba(241, 245, 249, 0.3)');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    } else {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
     
-    // Dibujar conexiones entre partículas
+    // MEJORA: Partículas más brillantes en modo claro
+    particles.forEach(particle => {
+        if (document.body.classList.contains('light-mode')) {
+            // Aumentar brillo y contraste en modo claro
+            particle.opacity = Math.min(particle.opacity + 0.2, 0.9); // Más opacas
+        }
+        particle.update();
+        particle.draw();
+    });
+    
+    // MEJORA: Conexiones más visibles en modo claro
     for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
             const dx = particles[i].x - particles[j].x;
             const dy = particles[i].y - particles[j].y;
             const distance = Math.sqrt(dx * dx + dy * dy);
             
-            if (distance < 150) {
+            if (distance < 120) {
                 ctx.beginPath();
-                ctx.strokeStyle = document.body.classList.contains('light-mode') 
-                    ? 'rgba(15, 118, 110, 0.1)' 
-                    : 'rgba(100, 255, 218, 0.1)';
-                ctx.lineWidth = 0.5;
-                ctx.globalAlpha = 0.3 * (1 - distance / 150);
+                
+                if (document.body.classList.contains('light-mode')) {
+                    // Conexiones más visibles en modo claro
+                    ctx.strokeStyle = `rgba(15, 118, 110, ${0.6 * (1 - distance / 120)})`; // Más opaco
+                    ctx.lineWidth = 2; // Más grueso
+                    ctx.shadowColor = 'rgba(15, 118, 110, 0.3)';
+                    ctx.shadowBlur = 5;
+                } else {
+                    ctx.strokeStyle = 'rgba(100, 255, 218, 0.1)';
+                    ctx.lineWidth = 0.5;
+                    ctx.shadowColor = 'transparent';
+                    ctx.shadowBlur = 0;
+                }
+                
+                ctx.globalAlpha = 0.6 * (1 - distance / 120);
                 ctx.moveTo(particles[i].x, particles[i].y);
                 ctx.lineTo(particles[j].x, particles[j].y);
                 ctx.stroke();
+                
+                // Resetear sombras
+                ctx.shadowColor = 'transparent';
+                ctx.shadowBlur = 0;
             }
         }
     }
     
-    // Actualizar y dibujar partículas
-    particles.forEach(particle => {
-        particle.update();
-        particle.draw();
-    });
-    
     requestAnimationFrame(animateParticles);
 }
 
-// Redimensionar canvas
+// Redimensionar canvas MEJORADO
 function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-    initParticles();
+    
+    // MEJORA: Recrear partículas con nueva distribución
+    const oldParticles = [...particles];
+    particles.length = 0;
+    
+    for (let i = 0; i < particleCount; i++) {
+        if (oldParticles[i]) {
+            particles.push(oldParticles[i]);
+            // Ajustar posición si es necesario
+            if (particles[i].x > canvas.width) particles[i].x = canvas.width;
+            if (particles[i].y > canvas.height) particles[i].y = canvas.height;
+        } else {
+            particles.push(new Particle());
+        }
+    }
 }
 
-// ===== TOGGLE MODO CLARO/OSCURO =====
+// ===== TOGGLE MODO CLARO/OSCURO MEJORADO =====
 const themeToggle = document.getElementById('themeToggle');
 const themeIcon = themeToggle.querySelector('i');
 
@@ -116,7 +187,7 @@ themeIcon.classList.remove('fa-sun');
 themeIcon.classList.add('fa-moon');
 localStorage.setItem('theme', 'dark');
 
-// Alternar tema
+// Alternar tema MEJORADO
 themeToggle.addEventListener('click', () => {
     document.body.classList.toggle('light-mode');
     
@@ -130,11 +201,14 @@ themeToggle.addEventListener('click', () => {
         localStorage.setItem('theme', 'dark');
     }
     
-    // Actualizar colores de partículas
+    // MEJORA: Actualizar partículas inmediatamente con nuevos colores
     particles.forEach(particle => {
         particle.color = document.body.classList.contains('light-mode') 
             ? lightModeColors[Math.floor(Math.random() * lightModeColors.length)]
             : darkModeColors[Math.floor(Math.random() * darkModeColors.length)];
+        particle.opacity = document.body.classList.contains('light-mode') 
+            ? Math.random() * 0.8 + 0.4
+            : Math.random() * 0.6 + 0.2;
     });
 });
 
@@ -564,10 +638,11 @@ function initScriptsCarousel() {
     adjustScriptsPerView();
     window.addEventListener('resize', adjustScriptsPerView);
 }
+
 // ===== INICIALIZACIÓN =====
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM completamente cargado'); // Debug
-    
+    initNewsCarousel();
     // Inicializar partículas
     initParticles();
     animateParticles();
@@ -639,3 +714,163 @@ if (heroCard) {
         heroCard.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
     });
 }
+// ===== CARRUSEL DE NOTICIAS =====
+function initNewsCarousel() {
+    const newsCarousel = document.getElementById('newsCarousel');
+    const newsPrev = document.getElementById('newsPrev');
+    const newsNext = document.getElementById('newsNext');
+    const newsDots = document.getElementById('newsDots');
+    
+    if (!newsCarousel || !newsPrev || !newsNext || !newsDots) return;
+    
+    let currentNewsSlide = 0;
+    const newsCards = document.querySelectorAll('#newsCarousel .news-card');
+    let newsPerView = getNewsPerView();
+
+    function getNewsPerView() {
+        if (window.innerWidth < 768) {
+            return 1;
+        } else if (window.innerWidth < 1200) {
+            return 2;
+        } else {
+            return 3;
+        }
+    }
+
+    function initNewsDots() {
+        newsDots.innerHTML = '';
+        const totalSlides = Math.ceil(newsCards.length / newsPerView);
+        
+        for (let i = 0; i < totalSlides; i++) {
+            const dot = document.createElement('span');
+            dot.classList.add('news-dot');
+            if (i === 0) dot.classList.add('active');
+            dot.setAttribute('data-slide', i);
+            dot.addEventListener('click', () => goToNewsSlide(i));
+            newsDots.appendChild(dot);
+        }
+    }
+
+    function goToNewsSlide(slideIndex) {
+        const totalSlides = Math.ceil(newsCards.length / newsPerView);
+        if (slideIndex < 0) slideIndex = totalSlides - 1;
+        if (slideIndex >= totalSlides) slideIndex = 0;
+        
+        currentNewsSlide = slideIndex;
+        
+        const card = newsCards[0];
+        if (!card) return;
+        
+        const cardWidth = card.offsetWidth + 30;
+        const scrollPosition = currentNewsSlide * cardWidth * newsPerView;
+        
+        newsCarousel.scrollTo({
+            left: scrollPosition,
+            behavior: 'smooth'
+        });
+        
+        document.querySelectorAll('.news-dot').forEach((dot, index) => {
+            dot.classList.toggle('active', index === currentNewsSlide);
+        });
+    }
+
+    newsPrev.addEventListener('click', () => {
+        goToNewsSlide(currentNewsSlide - 1);
+    });
+
+    newsNext.addEventListener('click', () => {
+        goToNewsSlide(currentNewsSlide + 1);
+    });
+
+    function adjustNewsPerView() {
+        newsPerView = getNewsPerView();
+        initNewsDots();
+        goToNewsSlide(0);
+    }
+
+    // Swipe para móviles
+    let startX = 0;
+    let endX = 0;
+    
+    newsCarousel.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX;
+    });
+    
+    newsCarousel.addEventListener('touchend', (e) => {
+        endX = e.changedTouches[0].clientX;
+        handleNewsSwipe();
+    });
+    
+    function handleNewsSwipe() {
+        const swipeThreshold = 50;
+        const diff = startX - endX;
+        
+        if (Math.abs(diff) > swipeThreshold) {
+            if (diff > 0) {
+                goToNewsSlide(currentNewsSlide + 1);
+            } else {
+                goToNewsSlide(currentNewsSlide - 1);
+            }
+        }
+    }
+
+    // Inicializar
+    adjustNewsPerView();
+    window.addEventListener('resize', adjustNewsPerView);
+}
+
+// ===== INICIALIZACIÓN =====
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM completamente cargado');
+    
+    // Inicializar partículas
+    initParticles();
+    animateParticles();
+    
+    // Inicializar carrusel
+    initCarouselDots();
+    
+    // Inicializar reloj
+    updateClock();
+    setInterval(updateClock, 1000);
+    
+    // Inicializar año en copyright
+    const yearElement = document.getElementById('year');
+    if (yearElement) {
+        yearElement.textContent = new Date().getFullYear();
+    }
+    
+    // Comprobar scroll para animaciones
+    window.addEventListener('scroll', checkScroll);
+    checkScroll();
+    
+    // Redimensionar canvas al cambiar tamaño de ventana
+    window.addEventListener('resize', resizeCanvas);
+    
+    // Inicializar menú hamburguesa
+    initMobileMenu();
+    
+    // Inicializar carrusel de scripts
+    initScriptsCarousel();
+    
+    // INICIALIZAR CARRUSEL DE NOTICIAS
+    initNewsCarousel();
+    
+    // Efecto de escritura para el subtítulo del héroe
+    const subtitle = document.querySelector('.hero .subtitle');
+    if (subtitle) {
+        const originalText = subtitle.textContent;
+        subtitle.textContent = '';
+        
+        let i = 0;
+        function typeWriter() {
+            if (i < originalText.length) {
+                subtitle.textContent += originalText.charAt(i);
+                i++;
+                setTimeout(typeWriter, 100);
+            }
+        }
+        
+        setTimeout(typeWriter, 1000);
+    }
+});

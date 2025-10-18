@@ -65,9 +65,11 @@ body {
     pointer-events: none;
 }
 
-/* Modo claro - MEJORADO - Ahora las partículas se ven */
+/* ===== MEJORAS ESPECÍFICAS PARA MODO CLARO ===== */
+
+/* Fondo animado más visible en modo claro */
 body.light-mode #particleCanvas {
-    background: transparent !important;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #f1f5f9 100%) !important;
 }
 
 body.light-mode {
@@ -94,10 +96,10 @@ header {
 }
 
 .light-mode header {
-    background: rgba(255, 255, 255, 0.98);
+    background: rgba(255, 255, 255, 0.98) !important;
     backdrop-filter: blur(20px);
     border-bottom: 1px solid rgba(15, 118, 110, 0.1);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 5px 20px rgba(15, 118, 110, 0.1) !important;
 }
 
 .navbar {
@@ -120,7 +122,7 @@ header {
 }
 
 .light-mode .logo {
-    color: var(--light-accent);
+    color: var(--light-primary);
 }
 
 .logo-icon {
@@ -141,7 +143,7 @@ header {
 }
 
 .light-mode .logo-text {
-    background: linear-gradient(45deg, var(--light-accent), #0d9488);
+    background: linear-gradient(45deg, var(--light-primary), var(--light-accent-blue));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
@@ -220,7 +222,23 @@ header {
 }
 
 .light-mode .hero {
-    background: rgba(241, 245, 249, 0.85);
+    background: linear-gradient(135deg, rgba(241, 245, 249, 0.95) 0%, rgba(226, 232, 240, 0.9) 100%) !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.light-mode .hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 20% 80%, rgba(15, 118, 110, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(15, 118, 110, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(15, 118, 110, 0.05) 0%, transparent 50%);
+    z-index: 0;
 }
 
 .hero-container {
@@ -239,9 +257,38 @@ header {
 }
 
 .light-mode .hero-container {
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid var(--light-border);
-    box-shadow: 0 20px 40px rgba(15, 118, 110, 0.1), 0 0 30px rgba(15, 118, 110, 0.05);
+    background: rgba(255, 255, 255, 0.92) !important;
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 
+        0 25px 50px rgba(15, 118, 110, 0.15),
+        0 0 0 1px rgba(255, 255, 255, 0.9),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+    position: relative;
+    z-index: 1;
+}
+
+/* Efecto de brillo mejorado para modo claro */
+.light-mode .hero-container::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, 
+        transparent, 
+        rgba(15, 118, 110, 0.1), 
+        rgba(15, 118, 110, 0.05), 
+        transparent);
+    border-radius: 22px;
+    z-index: -1;
+    animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 0.8; }
 }
 
 .hero-container:hover {
@@ -251,7 +298,10 @@ header {
 }
 
 .light-mode .hero-container:hover {
-    box-shadow: 0 30px 60px rgba(15, 118, 110, 0.15), 0 0 40px rgba(15, 118, 110, 0.1);
+    box-shadow: 
+        0 30px 60px rgba(15, 118, 110, 0.15),
+        0 0 0 1px rgba(255, 255, 255, 0.9),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
     border-color: var(--light-accent);
 }
 
@@ -314,6 +364,7 @@ header {
     flex-wrap: wrap;
 }
 
+/* ===== BOTONES HERO CORREGIDOS - IGUAL QUE MODO OSCURO ===== */
 .hero-btn {
     display: inline-block;
     padding: 12px 28px;
@@ -328,24 +379,41 @@ header {
     font-size: 16px;
     font-family: 'Orbitron', sans-serif;
     letter-spacing: 0.5px;
+    flex: 0 1 auto;
 }
 
-.light-mode .hero-btn {
+/* Modo claro - primeros 4 botones igual que modo oscuro */
+.light-mode .hero-btn:not(.btn-primary) {
+    background-color: transparent;
     color: var(--light-primary);
     border: 2px solid var(--light-primary);
-    background: transparent;
 }
 
+/* Botón Contacto con color diferente en modo claro */
+.light-mode .hero-btn.btn-primary {
+    background-color: var(--light-primary);
+    color: var(--white);
+    border: 2px solid var(--light-primary);
+}
+
+/* Hover effects */
 .hero-btn:hover {
     background-color: rgba(100, 255, 218, 0.15);
     transform: translateY(-5px);
     box-shadow: 0 8px 20px rgba(100, 255, 218, 0.4);
 }
 
-.light-mode .hero-btn:hover {
-    background: rgba(15, 118, 110, 0.08);
-    transform: translateY(-3px);
-    box-shadow: 0 10px 25px rgba(15, 118, 110, 0.15);
+.light-mode .hero-btn:not(.btn-primary):hover {
+    background-color: rgba(15, 118, 110, 0.15);
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(15, 118, 110, 0.4);
+}
+
+.light-mode .hero-btn.btn-primary:hover {
+    background-color: var(--light-accent-hover);
+    border-color: var(--light-accent-hover);
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(15, 118, 110, 0.4);
 }
 
 .social-icons {
@@ -385,10 +453,10 @@ header {
 }
 
 .light-mode .social-icon:hover {
-    background-color: var(--light-accent);
-    color: var(--white);
-    box-shadow: 0 8px 20px rgba(15, 118, 110, 0.3);
-    border-color: var(--light-accent);
+    background: linear-gradient(135deg, var(--light-primary) 0%, var(--light-accent-blue) 100%);
+    color: white !important;
+    transform: translateY(-5px) scale(1.1);
+    box-shadow: 0 10px 20px rgba(15, 118, 110, 0.3);
 }
 
 /* ===== BOTONES GENERALES ===== */
@@ -460,7 +528,13 @@ header {
 }
 
 .light-mode .section-title h2 {
-    color: var(--light-primary);
+    background: linear-gradient(135deg, var(--light-primary) 0%, var(--light-accent-blue) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 4px 8px rgba(15, 118, 110, 0.15);
+    position: relative;
+    display: inline-block;
 }
 
 /* ===== TÍTULOS CON BARRAS MÁS LARGAS ===== */
@@ -478,11 +552,20 @@ header {
 }
 
 .light-mode .section-title h2::after {
-    background-color: var(--light-primary);
+    background: linear-gradient(90deg, var(--light-primary), var(--light-accent-blue));
+    width: 120px;
+    height: 4px;
+    border-radius: 2px;
+    box-shadow: 0 2px 8px rgba(15, 118, 110, 0.3);
 }
 
 .section-title h2:hover::after {
     width: 250px; /* Aumentado de 120px a 150px para que sea más largo */
+}
+
+.light-mode .section-title h2:hover::after {
+    width: 250px;
+    background: linear-gradient(90deg, var(--light-primary), var(--light-accent-purple), var(--light-accent-blue));
 }
 
 /* ===== SECCIÓN SOBRE MÍ ===== */
@@ -565,9 +648,11 @@ header {
 }
 
 .light-mode .carousel-container {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 250, 252, 0.95));
-    border: 1px solid rgba(15, 118, 110, 0.3);
-    box-shadow: 0 10px 30px rgba(15, 118, 110, 0.1);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 
+        0 15px 35px rgba(15, 118, 110, 0.1),
+        0 0 0 1px rgba(255, 255, 255, 0.9) !important;
 }
 
 .carousel-slide {
@@ -605,8 +690,11 @@ header {
 }
 
 .light-mode .carousel-content i {
-    color: var(--light-primary);
-    text-shadow: 0 0 20px rgba(15, 118, 110, 0.4);
+    background: linear-gradient(135deg, var(--light-primary) 0%, var(--light-accent-blue) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 2px 4px rgba(15, 118, 110, 0.2));
 }
 
 .carousel-content span {
@@ -731,9 +819,14 @@ header {
 }
 
 .light-mode .skill-card {
-    background-color: var(--light-card-bg);
-    border: 1px solid var(--light-border);
-    box-shadow: var(--light-card-shadow);
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 
+        0 10px 30px rgba(15, 118, 110, 0.1),
+        0 1px 0 rgba(255, 255, 255, 0.8),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6) !important;
+    position: relative;
+    overflow: hidden;
 }
 
 .skill-card::before {
@@ -747,6 +840,27 @@ header {
     transition: left 0.5s;
 }
 
+.light-mode .skill-card::before,
+.light-mode .certification-card::before,
+.light-mode .script-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--light-primary), var(--light-accent-blue), var(--light-accent-purple));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+}
+
+.light-mode .skill-card:hover::before,
+.light-mode .certification-card:hover::before,
+.light-mode .script-card:hover::before {
+    transform: scaleX(1);
+}
+
 .skill-card:hover::before {
     left: 100%;
 }
@@ -757,15 +871,29 @@ header {
     border-color: var(--accent);
 }
 
-.light-mode .skill-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 15px 30px rgba(15, 118, 110, 0.15);
-    border-color: var(--light-primary);
+.light-mode .skill-card:hover,
+.light-mode .certification-card:hover,
+.light-mode .script-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 
+        0 20px 40px rgba(15, 118, 110, 0.15),
+        0 0 0 1px rgba(255, 255, 255, 0.9),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
 }
 
 .skill-icon {
     font-size: 3.5rem;
     margin-bottom: 25px;
+}
+
+.light-mode .skill-icon,
+.light-mode .certification-icon i,
+.light-mode .carousel-content i {
+    background: linear-gradient(135deg, var(--light-primary) 0%, var(--light-accent-blue) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 2px 4px rgba(15, 118, 110, 0.2));
 }
 
 .skill-card h3 {
@@ -817,9 +945,14 @@ header {
 }
 
 .light-mode .certification-card {
-    background-color: var(--light-card-bg);
-    border: 1px solid var(--light-border);
-    box-shadow: var(--light-card-shadow);
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 
+        0 10px 30px rgba(15, 118, 110, 0.1),
+        0 1px 0 rgba(255, 255, 255, 0.8),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6) !important;
+    position: relative;
+    overflow: hidden;
 }
 
 .certification-card::before {
@@ -851,8 +984,10 @@ header {
 
 .light-mode .certification-card:hover {
     transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 20px 40px rgba(15, 118, 110, 0.15);
-    border-color: var(--light-primary);
+    box-shadow: 
+        0 20px 40px rgba(15, 118, 110, 0.15),
+        0 0 0 1px rgba(255, 255, 255, 0.9),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
 }
 
 .certification-icon {
@@ -993,9 +1128,14 @@ header {
 }
 
 .light-mode .script-card {
-    background-color: var(--light-card-bg);
-    border: 1px solid var(--light-border);
-    box-shadow: var(--light-card-shadow);
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 
+        0 10px 30px rgba(15, 118, 110, 0.1),
+        0 1px 0 rgba(255, 255, 255, 0.8),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6) !important;
+    position: relative;
+    overflow: hidden;
 }
 
 .script-card:hover {
@@ -1006,7 +1146,10 @@ header {
 
 .light-mode .script-card:hover {
     transform: translateY(-8px);
-    box-shadow: 0 15px 30px rgba(15, 118, 110, 0.15);
+    box-shadow: 
+        0 15px 30px rgba(15, 118, 110, 0.15),
+        0 0 0 1px rgba(255, 255, 255, 0.9),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
     border-color: var(--light-primary);
 }
 
@@ -1239,8 +1382,8 @@ header {
 }
 
 .light-mode .social-link:hover {
-    background-color: var(--light-primary);
-    color: var(--white);
+    background: linear-gradient(135deg, var(--light-primary) 0%, var(--light-accent-blue) 100%);
+    color: white !important;
     box-shadow: 0 8px 15px rgba(15, 118, 110, 0.3);
 }
 
@@ -1253,9 +1396,12 @@ header {
 }
 
 .light-mode .contact-form {
-    background-color: var(--light-surface);
-    border: 1px solid var(--light-border);
-    box-shadow: var(--light-card-shadow);
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 
+        0 15px 35px rgba(15, 118, 110, 0.1),
+        0 0 0 1px rgba(255, 255, 255, 0.9),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
 }
 
 .form-group {
@@ -1285,9 +1431,11 @@ header {
 }
 
 .light-mode .form-control {
-    background-color: var(--light-bg);
-    border: 1px solid var(--light-border);
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(15, 118, 110, 0.2);
+    box-shadow: inset 0 2px 4px rgba(15, 118, 110, 0.05);
     color: var(--light-text);
+    transition: all 0.3s ease;
 }
 
 .form-control:focus {
@@ -1297,8 +1445,12 @@ header {
 }
 
 .light-mode .form-control:focus {
+    background: rgba(255, 255, 255, 0.95);
     border-color: var(--light-primary);
-    box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.2);
+    box-shadow: 
+        inset 0 2px 4px rgba(15, 118, 110, 0.05),
+        0 0 0 3px rgba(15, 118, 110, 0.1) !important;
+    transform: translateY(-2px);
 }
 
 textarea.form-control {
@@ -1404,8 +1556,9 @@ footer {
 }
 
 .light-mode footer {
-    background: rgba(255, 255, 255, 0.85);
-    border-top: 1px solid var(--light-border);
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    border-top: 1px solid rgba(15, 118, 110, 0.1);
+    box-shadow: 0 -5px 20px rgba(15, 118, 110, 0.05);
 }
 
 .footer-content {
@@ -1450,8 +1603,11 @@ footer {
 }
 
 .light-mode .footer-clock {
-    background-color: var(--light-bg);
-    border: 1px solid var(--light-border);
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    border: 1px solid rgba(15, 118, 110, 0.1);
+    box-shadow: 
+        inset 0 1px 0 rgba(255, 255, 255, 0.8),
+        0 5px 15px rgba(15, 118, 110, 0.05);
 }
 
 #clock {
@@ -1890,7 +2046,6 @@ footer {
     }
 }
 
-/* ===== MENÚ HAMBURGUESA RESPONSIVE ===== */
 /* ===== MENÚ HAMBURGUESA RESPONSIVE - CORREGIDO ===== */
 @media (max-width: 768px) {
     .nav-links {
@@ -2016,33 +2171,6 @@ footer {
     
     .mobile-menu {
         display: none !important;
-    }
-}
-
-/* Para tablets (768px - 992px) */
-@media (min-width: 769px) and (max-width: 992px) {
-    .nav-links li {
-        margin-left: 20px;
-    }
-    
-    .nav-links a {
-        font-size: 15px;
-    }
-}
-
-/* Para pantallas muy pequeñas (menos de 480px) */
-@media (max-width: 480px) {
-    .nav-links {
-        top: 70px;
-    }
-    
-    .nav-links a {
-        font-size: 16px;
-        padding: 12px 0;
-    }
-    
-    .mobile-menu {
-        font-size: 24px;
     }
 }
 
@@ -2381,5 +2509,545 @@ footer {
     .scripts-carousel {
         -ms-overflow-style: none;
         scrollbar-width: none;
+    }
+}
+
+/* ===== ANIMACIONES ADICIONALES PARA MODO CLARO ===== */
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+.light-mode .skill-card:hover,
+.light-mode .certification-card:hover {
+    animation: float 3s ease-in-out infinite;
+}
+
+/* Efectos de hover mejorados en modo claro para navegación */
+.light-mode .nav-links a {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.light-mode .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--light-primary), var(--light-accent-blue));
+    transition: width 0.3s ease;
+}
+
+.light-mode .nav-links a:hover::after {
+    width: 100%;
+}
+
+.light-mode .nav-links a:hover {
+    color: var(--light-primary) !important;
+    transform: translateY(-2px);
+}
+
+/* ===== MEJORAS ESPECÍFICAS PARA PARTÍCULAS EN MODO CLARO ===== */
+
+/* Efectos de partículas más visibles en modo claro */
+body.light-mode .particle {
+    filter: drop-shadow(0 0 8px rgba(15, 118, 110, 0.4));
+}
+
+/* Mejorar contraste de las conexiones entre partículas */
+body.light-mode .particle-connection {
+    stroke: rgba(15, 118, 110, 0.3);
+    stroke-width: 1.5;
+}
+
+/* Animación adicional para partículas en modo claro */
+@keyframes particle-glow {
+    0%, 100% { 
+        filter: drop-shadow(0 0 5px rgba(15, 118, 110, 0.3)); 
+    }
+    50% { 
+        filter: drop-shadow(0 0 12px rgba(15, 118, 110, 0.6)); 
+    }
+}
+
+body.light-mode .particle:nth-child(4n) {
+    animation: particle-glow 3s ease-in-out infinite;
+}
+
+body.light-mode .particle:nth-child(4n+1) {
+    animation: particle-glow 4s ease-in-out infinite 1s;
+}
+
+body.light-mode .particle:nth-child(4n+2) {
+    animation: particle-glow 5s ease-in-out infinite 2s;
+}
+
+/* ===== FOOTER CON COLOR PROFESIONAL ===== */
+.light-mode footer {
+    background: linear-gradient(135deg, #f8fafc 0%, #f0fdf9 50%, #e6f7f0 100%) !important;
+    border-top: 1px solid rgba(6, 95, 70, 0.15);
+    box-shadow: 0 -5px 25px rgba(6, 95, 70, 0.08);
+    position: relative;
+}
+
+.light-mode footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 20% 80%, rgba(6, 95, 70, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(6, 95, 70, 0.02) 0%, transparent 50%);
+    z-index: 0;
+}
+
+.light-mode .footer-content,
+.light-mode .footer-column,
+.light-mode .copyright {
+    position: relative;
+    z-index: 1;
+}
+
+/* Textos con el color principal de la página */
+.light-mode .footer-column h4 {
+    color: #0f766e !important;
+    font-weight: 600;
+}
+
+.light-mode .footer-column p,
+.light-mode .footer-column ul li a {
+    color: #475569 !important;
+}
+
+.light-mode .footer-column ul li a:hover {
+    color: #0f766e !important;
+    padding-left: 5px;
+    transition: all 0.3s ease;
+}
+
+.light-mode .footer-logo {
+    color: #0f766e !important;
+}
+
+.light-mode .footer-clock {
+    background: rgba(255, 255, 255, 0.8) !important;
+    border: 1px solid rgba(15, 118, 110, 0.2) !important;
+    backdrop-filter: blur(10px);
+}
+
+.light-mode #clock {
+    color: #0f766e !important;
+    font-weight: 600;
+}
+
+.light-mode #date {
+    color: #475569 !important;
+}
+
+.light-mode .copyright {
+    border-top: 1px solid rgba(15, 118, 110, 0.15) !important;
+    color: #475569 !important;
+    font-weight: 500;
+}
+
+/* Logo integrado */
+.light-mode .logo-simple-image {
+    border: 2px solid rgba(15, 118, 110, 0.2);
+    box-shadow: 0 5px 15px rgba(15, 118, 110, 0.1);
+    transition: all 0.3s ease;
+}
+
+.light-mode .logo-simple-image:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(15, 118, 110, 0.15);
+}
+/* ===== SECCIÓN ACTUALIDAD PROFESIONAL ===== */
+.news {
+    background-color: rgba(17, 34, 64, 0.85);
+}
+
+.light-mode .news {
+    background: rgba(248, 250, 252, 0.85);
+}
+
+.news .section-title p {
+    color: var(--text-secondary);
+    font-size: 1.2rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.light-mode .news .section-title p {
+    color: var(--light-secondary);
+}
+
+/* ===== CARRUSEL DE NOTICIAS ===== */
+.news-carousel-container {
+    position: relative;
+    margin: 0 auto;
+    max-width: 1200px;
+    padding: 0 60px;
+}
+
+.news-carousel {
+    display: flex;
+    overflow: hidden;
+    gap: 30px;
+    scroll-behavior: smooth;
+    padding: 20px 0;
+}
+
+.news-card {
+    flex: 0 0 calc(33.333% - 20px);
+    min-width: 380px;
+    background-color: var(--primary-medium);
+    border-radius: 15px;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(100, 255, 218, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.light-mode .news-card {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 
+        0 10px 30px rgba(15, 118, 110, 0.1),
+        0 1px 0 rgba(255, 255, 255, 0.8) !important;
+}
+
+.news-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(180deg, var(--accent), var(--accent-light));
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.3s ease;
+}
+
+.light-mode .news-card::before {
+    background: linear-gradient(180deg, var(--light-primary), var(--light-accent-blue));
+}
+
+.news-card:hover::before {
+    transform: scaleY(1);
+}
+
+.news-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(100, 255, 218, 0.2);
+    border-color: var(--accent);
+}
+
+.light-mode .news-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 
+        0 15px 30px rgba(15, 118, 110, 0.15),
+        0 0 0 1px rgba(255, 255, 255, 0.9) !important;
+    border-color: var(--light-primary);
+}
+
+.news-date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(100, 255, 218, 0.1);
+    border-radius: 10px;
+    padding: 15px 10px;
+    text-align: center;
+    min-width: 70px;
+}
+
+.light-mode .news-date {
+    background: rgba(15, 118, 110, 0.1);
+}
+
+.news-day {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--accent);
+    font-family: 'Orbitron', sans-serif;
+    line-height: 1;
+}
+
+.light-mode .news-day {
+    color: var(--light-primary);
+}
+
+.news-month {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-light);
+    margin: 5px 0;
+    text-transform: uppercase;
+}
+
+.light-mode .news-month {
+    color: var(--light-text);
+}
+
+.news-year {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.light-mode .news-year {
+    color: var(--light-secondary);
+}
+
+.news-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.news-tags {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+
+.news-tag {
+    background-color: var(--primary-light);
+    color: var(--accent);
+    padding: 4px 10px;
+    border-radius: 15px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.light-mode .news-tag {
+    background-color: var(--light-bg);
+    color: var(--light-primary);
+}
+
+.news-card h3 {
+    font-size: 1.3rem;
+    margin-bottom: 12px;
+    color: var(--text-light);
+    font-family: 'Orbitron', sans-serif;
+    line-height: 1.4;
+}
+
+.light-mode .news-card h3 {
+    color: var(--light-text);
+}
+
+.news-card p {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 15px;
+    font-size: 0.95rem;
+    flex-grow: 1;
+}
+
+.light-mode .news-card p {
+    color: var(--light-secondary);
+}
+
+.news-footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: auto;
+    padding-top: 15px;
+    border-top: 1px solid rgba(100, 255, 218, 0.1);
+}
+
+.light-mode .news-footer {
+    border-top: 1px solid rgba(15, 118, 110, 0.1);
+}
+
+.news-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.light-mode .news-link {
+    color: var(--light-primary);
+}
+
+.news-link:hover {
+    color: var(--accent-light);
+    transform: translateX(3px);
+}
+
+.light-mode .news-link:hover {
+    color: var(--light-accent-hover);
+}
+
+/* Botones del carrusel de noticias */
+.carousel-btn.news-prev,
+.carousel-btn.news-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(100, 255, 218, 0.2);
+    border: none;
+    color: var(--accent);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+    z-index: 10;
+}
+
+.light-mode .carousel-btn.news-prev,
+.light-mode .carousel-btn.news-next {
+    background: rgba(15, 118, 110, 0.1);
+    color: var(--light-primary);
+}
+
+.carousel-btn.news-prev:hover,
+.carousel-btn.news-next:hover {
+    background: var(--accent);
+    color: var(--primary-dark);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.light-mode .carousel-btn.news-prev:hover,
+.light-mode .carousel-btn.news-next:hover {
+    background: var(--light-primary);
+    color: var(--white);
+}
+
+.carousel-btn.news-prev {
+    left: 0;
+}
+
+.carousel-btn.news-next {
+    right: 0;
+}
+
+.news-dots {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 30px;
+}
+
+.news-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: rgba(100, 255, 218, 0.5);
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.light-mode .news-dot {
+    background-color: rgba(15, 118, 110, 0.3);
+}
+
+.news-dot.active {
+    background-color: var(--accent);
+    transform: scale(1.2);
+}
+
+.light-mode .news-dot.active {
+    background-color: var(--light-primary);
+}
+
+.news-dot:hover {
+    background-color: var(--accent);
+    transform: scale(1.2);
+}
+
+.light-mode .news-dot:hover {
+    background-color: var(--light-primary);
+}
+
+/* Responsive para carrusel de noticias */
+@media (max-width: 1200px) {
+    .news-carousel-container {
+        padding: 0 50px;
+    }
+    
+    .news-card {
+        flex: 0 0 calc(50% - 20px);
+        min-width: 350px;
+    }
+    
+    .carousel-btn.news-prev {
+        left: 10px;
+    }
+    
+    .carousel-btn.news-next {
+        right: 10px;
+    }
+}
+
+@media (max-width: 768px) {
+    .news-carousel-container {
+        padding: 0 40px;
+    }
+    
+    .news-card {
+        flex: 0 0 calc(100% - 20px);
+        min-width: 300px;
+    }
+    
+    .carousel-btn.news-prev,
+    .carousel-btn.news-next {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+    
+    .carousel-btn.news-prev {
+        left: 5px;
+    }
+    
+    .carousel-btn.news-next {
+        right: 5px;
+    }
+}
+
+@media (max-width: 480px) {
+    .news-carousel-container {
+        padding: 0 30px;
+    }
+    
+    .news-card {
+        min-width: 280px;
+        padding: 20px;
+    }
+    
+    .carousel-btn.news-prev,
+    .carousel-btn.news-next {
+        width: 35px;
+        height: 35px;
+        font-size: 14px;
+    }
+    
+    .news-card h3 {
+        font-size: 1.1rem;
     }
 }
